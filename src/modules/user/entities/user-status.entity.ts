@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "./user.entity";
 
-@Entity()
+@Entity('user_status')
 export class UserStatusEntity {
 
   @PrimaryGeneratedColumn()

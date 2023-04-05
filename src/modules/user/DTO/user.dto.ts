@@ -22,10 +22,10 @@ export class UserDTO {
   @IsEmail()
   email: string;
 
-  @IsNumber()
+  @IsString()
   @MaxLength(12)
   @MinLength(10)
-  phone: number;
+  phone: string;
 
   @MaxLength(255)
   password: string;

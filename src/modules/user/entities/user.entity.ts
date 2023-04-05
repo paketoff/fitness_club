@@ -3,7 +3,7 @@ import { UserRoleEntity } from "./user-role.entity";
 import { UserGenderEntity } from "./user-gender.entity";
 import { UserStatusEntity } from "./user-status.entity";
 
-@Entity()
+@Entity('user')
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id_user: number;
@@ -18,7 +18,7 @@ export class UserEntity {
   email: string;
 
   @Column()
-  phone: number;
+  phone: string;
 
   @Column()
   password: string;
