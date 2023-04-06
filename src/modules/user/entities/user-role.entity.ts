@@ -11,5 +11,5 @@ export class UserRoleEntity {
   role_name: string;
 
   @ManyToOne(() => UserEntity, (user) => user.user_role_id)
-  user: UserEntity;
+  users: UserEntity[];
 }

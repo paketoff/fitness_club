@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "./user.entity";
 
 @Entity('user_status')
@@ -11,5 +11,5 @@ export class UserStatusEntity {
   user_status_name: string;
 
   @ManyToOne(() => UserEntity, (user) => user.user_status_id)
-  user: UserEntity;
+  users: UserEntity[];
 }

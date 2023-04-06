@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserRoleEntity } from "./user-role.entity";
 import { UserGenderEntity } from "./user-gender.entity";
 import { UserStatusEntity } from "./user-status.entity";
@@ -23,12 +23,24 @@ export class UserEntity {
   @Column()
   password: string;
 
-  @OneToMany(() => UserRoleEntity, (role) => role.user)
-  user_role_id: UserRoleEntity[];
+  @ManyToOne(() => UserRoleEntity, (role) => role.users, {
+    onUpdate: 'CASCADE',
+    onDelete: 'RESTRICT'
+  })
+  @JoinColumn({name: 'user_role_id'})
+  user_role_id: UserRoleEntity;
 
-  @OneToMany(() => UserStatusEntity, (status) => status.user)
-  user_status_id: UserStatusEntity[];
+  @ManyToOne(() => UserStatusEntity, (status) => status.users, {
+    onUpdate: 'CASCADE',
+    onDelete: 'RESTRICT'
+  })
+  @JoinColumn({name: 'client_status_id'})
+  user_status_id: UserStatusEntity;
 
-  @OneToMany(() => UserGenderEntity, (gender) => gender.user)
-  user_gender_id: UserGenderEntity[];
+  @ManyToOne(() => UserGenderEntity, (gender) => gender.users, {
+    onUpdate: 'CASCADE',
+    onDelete: 'RESTRICT'
+  })
+  @JoinColumn({name: 'gender_id'})
+  user_gender_id: UserGenderEntity;
 }

@@ -30,7 +30,9 @@ export class AuthService {
   }
 
   async login(user: Omit<UserEntity, 'password'>) {
-    const payload = {id: user.id_user, email: user.email, roles: user.user_role_id.map(role => role.role_name)};
+    const payload = {id: user.id_user, email: user.email, 
+      // roles: user.user_role_id.map(role => role.role_name)
+    };
     return {
       access_token: this.jwtService.sign(payload),
     };
