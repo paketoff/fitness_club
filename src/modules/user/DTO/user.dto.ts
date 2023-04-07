@@ -32,13 +32,13 @@ export class UserDTO {
 
   @ValidateNested({each:true})
   @Type(() => UserRoleDTO)
-  user_role_id: UserRoleDTO[];
+  user_role_id: UserRoleDTO;
 
   @ValidateNested({each: true})
   @Type(() => UserStatusDTO)
-  user_status_id: UserStatusDTO[];
+  user_status_id: UserStatusDTO;
 
   @ValidateNested({each: true})
   @Type(() => UserGenderDTO)
-  user_gender_id: UserGenderDTO[];
+  user_gender_id: UserGenderDTO;
 }

@@ -1,24 +1,33 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { WorkoutEntity } from './entities/workout.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class WorkoutService {
 
-  constructor(private workoutRepository: Repository<WorkoutEntity>) {}
+  constructor(
+    @InjectRepository(WorkoutEntity)
+    private workoutRepository: Repository<WorkoutEntity>,
+    ) {}
 
 
-  async getAllWorkouts() {
+
+  async createWorkout(workout: WorkoutEntity): Promise<WorkoutEntity> {
+    return await this.workoutRepository.save(workout);
+  }
+
+  async getAllWorkouts(): Promise<WorkoutEntity[]> {
     return await this.workoutRepository.find();
   }
 
-  async findWorkoutById(id: number) {
+  async findWorkoutById(id: number): Promise<WorkoutEntity> {
     return await this.workoutRepository.findOne({
       where: {id_workout: id}
     });
   }
 
-  async createWorkout(id: number , updatedData: WorkoutEntity): Promise<WorkoutEntity | null> {
+  async updateWorkoutById(id: number , updatedData: WorkoutEntity): Promise<WorkoutEntity | null> {
     const workout = await this.workoutRepository.preload({
       id_workout: id,
       ...updatedData,
@@ -31,8 +40,12 @@ export class WorkoutService {
     return await this.workoutRepository.save(workout);
   }
 
-  async delete(id: number) {
-    return await this.workoutRepository.delete(id);
+  async deleteWorkoutById(id: number): Promise<void> {
+    const result = await this.workoutRepository.delete(id);
+
+    if(result.affected === 0) {
+      throw new NotFoundException(`Workout with id ${id} not found`);
+    }
   }
 
 }

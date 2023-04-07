@@ -19,19 +19,19 @@ export class UserService {
   }
 
 
-  async findByEmail(email: string): Promise<UserEntity | undefined> {
+  async findUserByEmail(email: string): Promise<UserEntity | undefined> {
     return await this.userRepository.findOne(
       {where: {email}}
     );
   }
 
-  async findById(id: number): Promise<UserEntity | undefined> {
+  async findUserById(id: number): Promise<UserEntity | undefined> {
     return await this.userRepository.findOne(
      {where: {id_user: id}}
     );
   }
 
-  async updateUser(id: number, updatedData: Partial<UserEntity>): Promise<UserEntity> {
+  async updateUserById(id: number, updatedData: Partial<UserEntity>): Promise<UserEntity> {
     const user = await this.userRepository.preload({
       id_user: id,
       ...updatedData,
@@ -51,7 +51,7 @@ export class UserService {
 
 
 
-  async deleteUser(id: number): Promise<void> {
+  async deleteUserById(id: number): Promise<void> {
     const result = await this.userRepository.delete(id);
 
     if(result.affected === 0) {

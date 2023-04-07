@@ -12,7 +12,3 @@ export class DurationTransformer implements ValueTransformer {
     return differenceInMinutes(durationDate, new Date(0));
   }
 }
-
-function parseDuration(value: string) {
-  throw new Error("Function not implemented.");
-}

@@ -1,4 +1,7 @@
-import { IsEmail, IsNumber, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsEmail, IsNumber, IsString, ValidateNested } from "class-validator";
+import { CoachCategoryDTO } from "./coach-category.dto";
+import { CoachGenderDTO } from "./coach-gender.dto";
 
 
 export class CoachDTO {
@@ -22,10 +25,12 @@ export class CoachDTO {
   @IsNumber()
   rating: number;
 
-  @IsNumber()
-  category_id: number;
+  @ValidateNested({each: true})
+  @Type(() => CoachCategoryDTO)
+  category_id: CoachCategoryDTO;
 
-  @IsNumber()
-  coach_gender_id: number;
+  @ValidateNested({each: true})
+  @Type(() => CoachGenderDTO)
+  coach_gender_id: CoachGenderDTO;
 
 }

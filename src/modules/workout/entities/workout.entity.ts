@@ -11,7 +11,7 @@ export class WorkoutEntity {
   @Column()
   workout_name: string;
 
-  @Column()
+  @Column({type: 'mediumtext'})
   description: string;
 
   @Column({type: 'time', transformer: new DurationTransformer()})

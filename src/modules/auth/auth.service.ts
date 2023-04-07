@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   async validateUser(email: string, password: string): Promise<Omit<UserEntity, 'password'> | null> {
-    const user = await this.userService.findByEmail(email);
+    const user = await this.userService.findUserByEmail(email);
 
     if(user && await bcrypt.compare(password, user.password)) {
       const { password, ...result } = user;
@@ -39,7 +39,7 @@ export class AuthService {
   }
 
   async validateUserById(id: number): Promise<UserEntity | null> {
-    return await this.userService.findById(id);
+    return await this.userService.findUserById(id);
   }
 
 }

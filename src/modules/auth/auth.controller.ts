@@ -13,7 +13,7 @@ export class AuthController {
   async register(@Body() createUserDTO: UserDTO): Promise<UserEntity> {
     const userEntity = new UserEntity();
     Object.assign(userEntity, createUserDTO);
-    return this.authService.register(userEntity);
+    return await this.authService.register(userEntity);
   }
 
   @Post('login') 
