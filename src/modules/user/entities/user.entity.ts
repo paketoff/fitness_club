@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 import { UserRoleEntity } from "./user-role.entity";
 import { UserGenderEntity } from "./user-gender.entity";
 import { UserStatusEntity } from "./user-status.entity";
+import { SubscriptionEntity } from "src/modules/subscription/entities/subscription.entity";
 
 @Entity('user')
 export class UserEntity {
@@ -43,4 +44,8 @@ export class UserEntity {
   })
   @JoinColumn({name: 'gender_id'})
   user_gender_id: UserGenderEntity;
+
+  @OneToMany(() => SubscriptionEntity, (sub) => sub.user_id)
+  subscriptions: SubscriptionEntity[];
+
 }
