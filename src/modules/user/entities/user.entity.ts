@@ -3,6 +3,7 @@ import { UserRoleEntity } from "./user-role.entity";
 import { UserGenderEntity } from "./user-gender.entity";
 import { UserStatusEntity } from "./user-status.entity";
 import { SubscriptionEntity } from "src/modules/subscription/entities/subscription.entity";
+import { WorkoutHistoryEntity } from "src/modules/workout-history/DTO/workout-history.dto";
 
 @Entity('user')
 export class UserEntity {
@@ -47,5 +48,8 @@ export class UserEntity {
 
   @OneToMany(() => SubscriptionEntity, (sub) => sub.user_id)
   subscriptions: SubscriptionEntity[];
+
+  @OneToMany(() => WorkoutHistoryEntity, (workout_history) => workout_history.user)
+  workout_histories: WorkoutHistoryEntity[];
 
 }

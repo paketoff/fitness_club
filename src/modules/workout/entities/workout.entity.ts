@@ -1,5 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { DurationTransformer } from "../DurationTransformer/duration-transformer.class";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { WorkoutHistoryEntity } from "src/modules/workout-history/DTO/workout-history.dto";
 
 
 @Entity('workout')
@@ -14,6 +14,9 @@ export class WorkoutEntity {
   @Column({type: 'mediumtext'})
   description: string;
 
-  @Column({type: 'time', transformer: new DurationTransformer()})
-  duration: Date = new Date();
+  @Column({type: 'time'})
+  duration: string;
+
+  @OneToMany(() => WorkoutHistoryEntity, (workout_history) => workout_history.workout)
+  workout_histories: WorkoutHistoryEntity[];
 }

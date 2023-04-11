@@ -4,9 +4,12 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { CoachCategoryEntity } from './coach-category.entity';
 import { CoachGenderEntity } from './coach-gender.entity';
+import { WorkoutHistoryEntity } from 'src/modules/workout-history/entities/workout-history.entity';
+import { CoachScheduleEntity } from 'src/modules/coach-schedule/entities/coach-schedule.entity';
 
 @Entity('coach')
 export class CoachEntity {
@@ -41,4 +44,10 @@ export class CoachEntity {
   })
   @JoinColumn({ name: 'coach_gender_id' })
   gender: CoachGenderEntity;
+
+  @OneToMany(() => WorkoutHistoryEntity, (workout_history) => workout_history.coach)
+  workout_histories: WorkoutHistoryEntity[];
+
+  @OneToMany(() => CoachScheduleEntity, (schedule) => schedule.coach)
+  schedules: CoachScheduleEntity[];
 }
