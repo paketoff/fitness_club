@@ -1,7 +1,8 @@
 import { WorkoutHistoryEntity } from "src/modules/workout-history/entities/workout-history.entity";
-import { Column, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
+@Entity('workout_type')
 export class WorkoutTypeEntity {
 
   @PrimaryGeneratedColumn()

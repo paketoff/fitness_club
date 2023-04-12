@@ -24,16 +24,17 @@ export class WorkoutHistoryService {
     })
   }
 
-  async getHistoryByCoachId(id_coach: number): Promise<WorkoutHistoryEntity> {
+  //TODO: провести анализ на надобность этого функционала.
+  // async getHistoryByCoachId(id_coach: number): Promise<WorkoutHistoryEntity> {
     
-    const coach = await this.coachRepo.findOne({
-      where: {id_coach: id_coach}
-    })
+  //   const coach = await this.coachRepo.findOne({
+  //     where: {id_coach: id_coach}
+  //   })
     
-    return await this.workoutHistoryRepo.findOneBy({
-      coach: coach
-    })
-  }
+  //   return await this.workoutHistoryRepo.findOneBy({
+  //     coach: coach
+  //   })
+  // }
 
   async createHistory(workoutHistory: WorkoutHistoryEntity): Promise<WorkoutHistoryEntity> {
     return this.workoutHistoryRepo.save(workoutHistory);

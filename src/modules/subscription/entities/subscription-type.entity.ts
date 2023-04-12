@@ -1,7 +1,7 @@
-import { Column, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { SubscriptionEntity } from "./subscription.entity";
 
-
+@Entity('subscription_type')
 export class SubscriptionTypeEntity {
 
   @PrimaryGeneratedColumn()

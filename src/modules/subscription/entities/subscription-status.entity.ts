@@ -1,7 +1,7 @@
-import { Column, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { SubscriptionEntity } from "./subscription.entity";
 
-
+@Entity('subscription_status')
 export class SubscriptionStatusEntity {
 
   @PrimaryGeneratedColumn()

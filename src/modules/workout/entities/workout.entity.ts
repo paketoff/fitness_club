@@ -1,5 +1,5 @@
+import { WorkoutHistoryEntity } from "src/modules/workout-history/entities/workout-history.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { WorkoutHistoryEntity } from "src/modules/workout-history/DTO/workout-history.dto";
 
 
 @Entity('workout')

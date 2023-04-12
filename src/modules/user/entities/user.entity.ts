@@ -3,7 +3,7 @@ import { UserRoleEntity } from "./user-role.entity";
 import { UserGenderEntity } from "./user-gender.entity";
 import { UserStatusEntity } from "./user-status.entity";
 import { SubscriptionEntity } from "src/modules/subscription/entities/subscription.entity";
-import { WorkoutHistoryEntity } from "src/modules/workout-history/DTO/workout-history.dto";
+import { WorkoutHistoryEntity } from "src/modules/workout-history/entities/workout-history.entity";
 
 @Entity('user')
 export class UserEntity {

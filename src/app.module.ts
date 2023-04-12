@@ -14,6 +14,12 @@ import { WorkoutEntity } from './modules/workout/entities/workout.entity';
 import { WorkoutModule } from './modules/workout/workout.module';
 import { CoachModule } from './modules/coach/coach.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { WorkoutTypeEntity } from './modules/workout/entities/workout-type.entity';
+import { WorkoutHistoryEntity } from './modules/workout-history/entities/workout-history.entity';
+import { CoachScheduleEntity } from './modules/coach-schedule/entities/coach-schedule.entity';
+import { SubscriptionEntity } from './modules/subscription/entities/subscription.entity';
+import { SubscriptionTypeEntity } from './modules/subscription/entities/subscription-type.entity';
+import { SubscriptionStatusEntity } from './modules/subscription/entities/subscription-status.entity';
 
 @Module({
   imports: [
@@ -36,7 +42,17 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           CoachEntity,
           CoachGenderEntity,
           CoachCategoryEntity,
-          WorkoutEntity
+          WorkoutEntity,
+          WorkoutTypeEntity,
+          WorkoutHistoryEntity,
+          CoachEntity,
+          CoachGenderEntity,
+          CoachCategoryEntity,
+          CoachScheduleEntity,
+          SubscriptionEntity,
+          SubscriptionTypeEntity,
+          SubscriptionStatusEntity,
+
         ],
       }),
       inject: [ConfigService],

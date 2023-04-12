@@ -1,9 +1,9 @@
 import { UserEntity } from "src/modules/user/entities/user.entity";
-import { Column, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { SubscriptionTypeEntity } from "./subscription-type.entity";
 import { SubscriptionStatusEntity } from "./subscription-status.entity";
 
-
+@Entity('subscription')
 export class SubscriptionEntity {
 
   @PrimaryGeneratedColumn()
