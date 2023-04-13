@@ -1,28 +1,35 @@
 import { Type } from "class-transformer";
-import { IsEmail, IsNumber, IsString, ValidateNested } from "class-validator";
+import { IsEmail, IsInt, IsNotEmpty, IsNumber, IsString, MaxLength, ValidateNested } from "class-validator";
 import { CoachCategoryDTO } from "./coach-category.dto";
 import { CoachGenderDTO } from "./coach-gender.dto";
 
 
 export class CoachDTO {
 
-  @IsNumber()
+  @IsInt()
   id_coach: number;
 
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(45)
   name: string;
 
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(45)
   surname: string;
 
   @IsNumber()
+  @IsNotEmpty()
   salary: number;
 
   @IsString()
+  @MaxLength(45)
   @IsEmail()
   email: string;
 
   @IsNumber()
+  @IsNotEmpty()
   rating: number;
 
   @ValidateNested({each: true})

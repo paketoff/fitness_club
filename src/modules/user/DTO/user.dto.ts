@@ -1,5 +1,4 @@
-import { IsEmail, IsNumber, IsString, Matches, MaxLength, MinLength, ValidateNested } from "class-validator";
-import { OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { IsEmail, IsInt, IsNotEmpty, IsNumber, IsNumberString, IsString, Matches, MaxLength, MinLength, ValidateNested } from "class-validator";
 import { UserRoleDTO } from "./user-role.dto";
 import { Type } from "class-transformer";
 import { UserStatusDTO } from "./user-status.dto";
@@ -7,27 +6,33 @@ import { UserGenderDTO } from "./user-gender.dto";
 
 
 export class UserDTO {
-  @IsNumber()
+  @IsInt()
   id_user: number;
 
   @IsString()
+  @IsNotEmpty()
   @MaxLength(45)
   name: string;
 
   @IsString()
+  @IsNotEmpty()
   @MaxLength(45)
   surname: string;
 
   @IsString()
   @IsEmail()
+  @IsNotEmpty()
+  @MaxLength(45)
   email: string;
 
   @IsString()
+  @IsNotEmpty()
   @MaxLength(12)
   @MinLength(10)
   phone: string;
 
   @MaxLength(255)
+  @IsNotEmpty()
   password: string;
 
   @ValidateNested({each:true})

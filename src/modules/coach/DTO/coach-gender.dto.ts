@@ -1,11 +1,13 @@
-import { IsNumber, IsString } from "class-validator";
+import { IsInt, IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator";
 
 
 export class CoachGenderDTO {
   
-  @IsNumber()
+  @IsInt()
   id_coach_gender: number;
 
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(45)
   gender_name: string;
 }

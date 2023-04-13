@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { UserRoleEntity } from "./user-role.entity";
 import { UserGenderEntity } from "./user-gender.entity";
 import { UserStatusEntity } from "./user-status.entity";

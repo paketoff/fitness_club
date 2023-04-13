@@ -1,13 +1,14 @@
-import { IsNumber, IsString, MaxLength } from "class-validator";
+import { IsInt, IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator";
 import { ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 export class UserRoleDTO {
 
-  @IsNumber()
+  @IsInt()
   id_user_role: number;
 
   @IsString()
+  @IsNotEmpty()
   @MaxLength(45)
   role_name: string;
 }
