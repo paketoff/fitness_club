@@ -28,6 +28,10 @@ export class CoachDTO {
   @IsEmail()
   email: string;
 
+  @IsString()
+  @MaxLength(255)
+  password: string;
+
   @IsNumber()
   @IsNotEmpty()
   rating: number;

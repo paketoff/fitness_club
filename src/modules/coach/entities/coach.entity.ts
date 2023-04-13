@@ -28,6 +28,9 @@ export class CoachEntity {
   @Column()
   email: string;
 
+  @Column()
+  password: string;
+
   @Column({ type: 'decimal' })
   rating: number;
 

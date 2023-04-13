@@ -3,6 +3,9 @@ import { AuthService } from './auth.service';
 import { UserDTO } from '../user/DTO/user.dto';
 import { UserEntity } from '../user/entities/user.entity';
 import { LoginUserDTO } from '../user/DTO/login-user.dto';
+import { CoachDTO } from '../coach/DTO/coach.dto';
+import { CoachEntity } from '../coach/entities/coach.entity';
+import { LoginCoachDTO } from '../coach/DTO/coach-login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -10,20 +13,38 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  async register(@Body() createUserDTO: UserDTO): Promise<UserEntity> {
+  async registerUser(@Body() createUserDTO: UserDTO): Promise<UserEntity> {
     const userEntity = new UserEntity();
     Object.assign(userEntity, createUserDTO);
-    return await this.authService.register(userEntity);
+    return await this.authService.registerUser(userEntity);
   }
 
   @Post('login') 
-  async login(@Body() loginUserDTO: LoginUserDTO) {
+  async loginUser(@Body() loginUserDTO: LoginUserDTO) {
     const user = await this.authService.validateUser(loginUserDTO.email, loginUserDTO.password);
 
     if(!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    return this.authService.login(user);
+    return await this.authService.loginUser(user);
+  }
+
+  @Post('register-coach')
+  async registerCoach(@Body() createCoachDTO: CoachDTO): Promise<CoachEntity> {
+    const coachEntity = new CoachEntity();
+    Object.assign(coachEntity, createCoachDTO);
+    return await this.authService.registerCoach(coachEntity);
+  }
+
+  @Post('login-coach')
+  async loginCoach(@Body() loginCoachDTO: LoginCoachDTO) {
+    const coach = await this.authService.validateCoach(loginCoachDTO.email, loginCoachDTO.password);
+
+    if(!coach) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+
+    return await this.authService.loginCoach(coach);
   }
 }

@@ -4,6 +4,8 @@ import { UserDTO } from '../user/DTO/user.dto';
 import { UserEntity } from '../user/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { CoachService } from '../coach/coach.service';
+import { CoachEntity } from '../coach/entities/coach.entity';
 
 @Injectable()
 export class AuthService {
@@ -11,12 +13,18 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly coachService: CoachService,
     ) {}
 
 
-  async register(user: UserEntity): Promise<UserEntity | null> {
+  async registerUser(user: UserEntity): Promise<UserEntity | null> {
     const createdUser = await this.userService.createUser(user);
     return createdUser;
+  }
+
+  async registerCoach(coach: CoachEntity): Promise<CoachEntity | null> {
+    const createdCoach = await this.coachService.createCoach(coach);
+    return createdCoach;
   }
 
   async validateUser(email: string, password: string): Promise<Omit<UserEntity, 'password'> | null> {
@@ -29,10 +37,39 @@ export class AuthService {
     return null;
   }
 
-  async login(user: Omit<UserEntity, 'password'>) {
-    const payload = {id: user.id_user, email: user.email, 
-      // roles: user.user_role_id.map(role => role.role_name)
+  async validateCoach(email: string, password: string): Promise<Omit<CoachEntity, 'password'> | null> {
+    const coach = await this.coachService.findCoachByEmail(email);
+
+    if(coach && await bcrypt.compare(password, coach.password)) {
+      const { password, ...result } = coach;
+      return result;
+    }
+    return null;
+  }
+
+  async loginUser(user: Omit<UserEntity, 'password'>) {
+    const payload = {
+      id: user.id_user, 
+      email: user.email, 
+      role_id: user.user_role_id,
+      name: user.name,
+      surname: user.surname
     };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
+  }
+
+  async loginCoach(coach: Omit<CoachEntity, 'password'>) {
+    const payload  = {
+      id: coach.id_coach,
+      email: coach.email,
+      name: coach.name,
+      surname: coach.surname,
+      rating: coach.rating,
+      category_id: coach.category,
+      coach_gender_id: coach.gender,
+    }
     return {
       access_token: this.jwtService.sign(payload),
     };
@@ -40,6 +77,10 @@ export class AuthService {
 
   async validateUserById(id: number): Promise<UserEntity | null> {
     return await this.userService.findUserById(id);
+  }
+
+  async validateCoachById(id: number): Promise<CoachEntity | null> {
+    return await this.coachService.getCoachById(id);
   }
 
 }

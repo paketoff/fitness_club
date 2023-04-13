@@ -24,6 +24,14 @@ export class CoachService {
     });
   }
 
+  async findCoachByEmail(email: string): Promise<CoachEntity | undefined> {
+    return await this.coachRepository.findOne(
+      {
+        where: {email: email}
+      }
+    )
+  }
+
   async updateCoachById(id: number, updatedData: CoachEntity): Promise<CoachEntity | null> {
     const coach = await this.coachRepository.preload({
       id_coach: id,
