@@ -2,11 +2,14 @@ import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { CoachService } from './coach.service';
 import { CoachEntity } from './entities/coach.entity';
 import { CoachDTO } from './DTO/coach.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('coaches')
 export class CoachController {
   constructor(private readonly coachService: CoachService) {}
 
+  @Roles('user')
   @Get('get-coaches')
   async getAllCoaches():Promise<CoachEntity[]> {
     return await this.coachService.getAllCoaches();

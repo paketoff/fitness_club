@@ -20,6 +20,7 @@ import { CoachScheduleEntity } from './modules/coach-schedule/entities/coach-sch
 import { SubscriptionEntity } from './modules/subscription/entities/subscription.entity';
 import { SubscriptionTypeEntity } from './modules/subscription/entities/subscription-type.entity';
 import { SubscriptionStatusEntity } from './modules/subscription/entities/subscription-status.entity';
+import { RolesGuard } from './modules/auth/guards/roles.guard';
 
 @Module({
   imports: [
@@ -62,6 +63,9 @@ import { SubscriptionStatusEntity } from './modules/subscription/entities/subscr
     CoachModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    RolesGuard,
+  ],
 })
 export class AppModule {}
