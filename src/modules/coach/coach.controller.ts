@@ -17,13 +17,6 @@ export class CoachController {
     return await this.coachService.getCoachById(id);
   }
 
-  @Post('register')
-  async createCoach(@Body() createCoachDTO: CoachDTO): Promise<CoachEntity> {
-    const coachEntity = new CoachEntity();
-    Object.assign(coachEntity, createCoachDTO);
-    return await this.coachService.createCoach(coachEntity);
-  } 
-
   @Put(':id')
   async updateCoachById(
     @Param('id') id: number,

@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CoachEntity } from './entities/coach.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
+
 
 @Injectable()
 export class CoachService {
@@ -11,6 +13,8 @@ export class CoachService {
     ) {}
 
   async createCoach(coach: CoachEntity): Promise<CoachEntity> {
+    const salt = await bcrypt.genSalt();
+    coach.password = await bcrypt.hash(coach.password, salt);
     return await this.coachRepository.save(coach);
   }
 
