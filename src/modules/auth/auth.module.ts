@@ -5,12 +5,16 @@ import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CoachModule } from '../coach/coach.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserRoleEntity } from '../user/entities/user-role.entity';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
     UserModule,
     ConfigModule,
     CoachModule,
+    TypeOrmModule.forFeature([UserRoleEntity]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -20,7 +24,10 @@ import { CoachModule } from '../coach/coach.module';
       }),
     }),
   ],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    JwtStrategy,
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}

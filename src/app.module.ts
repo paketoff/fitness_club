@@ -25,6 +25,7 @@ import { RolesGuard } from './modules/auth/guards/roles.guard';
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    TypeOrmModule.forFeature([UserRoleEntity]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

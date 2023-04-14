@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Post, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserDTO } from '../user/DTO/user.dto';
 import { UserEntity } from '../user/entities/user.entity';
@@ -6,6 +6,9 @@ import { LoginUserDTO } from '../user/DTO/login-user.dto';
 import { CoachDTO } from '../coach/DTO/coach.dto';
 import { CoachEntity } from '../coach/entities/coach.entity';
 import { LoginCoachDTO } from '../coach/DTO/coach-login.dto';
+import { RolesGuard } from './guards/roles.guard';
+import { Roles } from './decorators/roles.decorator';
+import { AuthGuard } from './guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -31,6 +34,8 @@ export class AuthController {
   }
 
   @Post('register-coach')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
   async registerCoach(@Body() createCoachDTO: CoachDTO): Promise<CoachEntity> {
     const coachEntity = new CoachEntity();
     Object.assign(coachEntity, createCoachDTO);
