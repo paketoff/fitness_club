@@ -21,6 +21,8 @@ import { SubscriptionEntity } from './modules/subscription/entities/subscription
 import { SubscriptionTypeEntity } from './modules/subscription/entities/subscription-type.entity';
 import { SubscriptionStatusEntity } from './modules/subscription/entities/subscription-status.entity';
 import { RolesGuard } from './modules/auth/guards/roles.guard';
+import { CoachQualificationEntity } from './modules/coach-qualification/entities/coach-qualification.entity';
+
 
 @Module({
   imports: [
@@ -47,14 +49,11 @@ import { RolesGuard } from './modules/auth/guards/roles.guard';
           WorkoutEntity,
           WorkoutTypeEntity,
           WorkoutHistoryEntity,
-          CoachEntity,
-          CoachGenderEntity,
-          CoachCategoryEntity,
           CoachScheduleEntity,
           SubscriptionEntity,
           SubscriptionTypeEntity,
           SubscriptionStatusEntity,
-
+          CoachQualificationEntity,
         ],
       }),
       inject: [ConfigService],

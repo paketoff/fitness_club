@@ -5,11 +5,14 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { CoachCategoryEntity } from './coach-category.entity';
 import { CoachGenderEntity } from './coach-gender.entity';
 import { WorkoutHistoryEntity } from 'src/modules/workout-history/entities/workout-history.entity';
 import { CoachScheduleEntity } from 'src/modules/coach-schedule/entities/coach-schedule.entity';
+import { CoachQualificationEntity } from 'src/modules/coach-qualification/entities/coach-qualification.entity';
 
 @Entity('coach')
 export class CoachEntity {
@@ -53,4 +56,12 @@ export class CoachEntity {
 
   @OneToMany(() => CoachScheduleEntity, (schedule) => schedule.coach)
   schedules: CoachScheduleEntity[];
+
+  @ManyToMany(() => CoachQualificationEntity, (qualification) => qualification.coaches)
+  @JoinTable({
+    name: 'qualification_and_coach', 
+    joinColumn: { name: 'coach_id', referencedColumnName: 'id_coach' },
+    inverseJoinColumn: { name: 'qualification_id', referencedColumnName: 'id_qualification' },
+  })
+  qualifications: CoachQualificationEntity[];
 }
