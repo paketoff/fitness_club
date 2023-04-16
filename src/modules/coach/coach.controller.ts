@@ -3,12 +3,14 @@ import { CoachService } from './coach.service';
 import { CoachEntity } from './entities/coach.entity';
 import { CoachDTO } from './DTO/coach.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { CoachQualificationService } from '../coach-qualification/coach-qualification.service';
-import { classToPlain } from 'class-transformer';
 import { AddQualificationToCoachDTO } from '../qualification-and-coach/DTO/add-qualification-to-coach.dto';
 import { CoachQualificationEntity } from '../coach-qualification/entities/coach-qualification.entity';
 import { UpdateQualificationsForCoachDTO } from '../qualification-and-coach/DTO/update-qualification-for-coach.dto';
 import { RemoveQualificationFromCoachDTO } from '../qualification-and-coach/DTO/remove-qualification-from-coach.dto';
+import { AddUserToCoachDTO } from '../users-and-coaches/DTO/add-user-to-coach.dto';
+import { UserEntity } from '../user/entities/user.entity';
+import { UpdateUsersForCoachDTO } from '../users-and-coaches/DTO/update-user-for-coach.dto';
+import { RemoveUserFromCoachDTO } from '../users-and-coaches/DTO/remove-user-from-coach.dto';
 
 @Controller('coaches')
 export class CoachController {
@@ -77,6 +79,43 @@ export class CoachController {
     return await this.coachService.removeQualificationFromCoach(
       removeQualificationFromCoachDTO.coach_id,
       removeQualificationFromCoachDTO.qualification_id,
+    );
+  }
+
+  @Post('add-user-to-coach')
+  async addUserToCoach(
+    @Body() addUserToCoachDTO: AddUserToCoachDTO,
+  ): Promise<CoachEntity> {
+    return await this.coachService.addUserToCoach(
+      addUserToCoachDTO.coach_id,
+      addUserToCoachDTO.user_id,
+    );
+}
+
+  @Get('get-user-for-coach/:id')
+  async getCoachesForUser(
+    @Param('id') coach_id: number,
+  ): Promise<UserEntity[]> {
+    return await this.coachService.getUsersForCoach(coach_id);
+  }
+
+  @Put('update-users-for-coach')
+  async updateUsersForCoach(
+    @Body() updateUsersForCoachDTO: UpdateUsersForCoachDTO,
+  ): Promise<CoachEntity> {
+    return await this.coachService.updateUsersForCoach(
+      updateUsersForCoachDTO.coach_id,
+      updateUsersForCoachDTO.new_user_ids,
+    );
+  }
+
+  @Post('remove-user-from-coach')
+  async removeUserFromCoach(
+    @Body() removeUserFromCoachDTO: RemoveUserFromCoachDTO,
+  ): Promise<CoachEntity> {
+    return await this.coachService.removeUserFromCoach(
+      removeUserFromCoachDTO.coach_id,
+      removeUserFromCoachDTO.user_id,
     );
   }
 }

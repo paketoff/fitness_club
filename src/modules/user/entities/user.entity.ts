@@ -1,9 +1,10 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { UserRoleEntity } from "./user-role.entity";
 import { UserGenderEntity } from "./user-gender.entity";
 import { UserStatusEntity } from "./user-status.entity";
 import { SubscriptionEntity } from "src/modules/subscription/entities/subscription.entity";
 import { WorkoutHistoryEntity } from "src/modules/workout-history/entities/workout-history.entity";
+import { CoachEntity } from "src/modules/coach/entities/coach.entity";
 
 @Entity('user')
 export class UserEntity {
@@ -52,4 +53,6 @@ export class UserEntity {
   @OneToMany(() => WorkoutHistoryEntity, (workout_history) => workout_history.user)
   workout_histories: WorkoutHistoryEntity[];
 
+  @ManyToMany(() => CoachEntity, (coach) => coach.clients)
+  coaches: CoachEntity[];
 }

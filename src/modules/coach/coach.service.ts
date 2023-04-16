@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CoachEntity } from './entities/coach.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { CoachQualificationEntity } from '../coach-qualification/entities/coach-qualification.entity';
+import { UserEntity } from '../user/entities/user.entity';
 
 
 @Injectable()
@@ -13,6 +14,8 @@ export class CoachService {
     private readonly coachRepository: Repository<CoachEntity>,
     @InjectRepository(CoachQualificationEntity)
     private readonly qualificationRepository: Repository<CoachQualificationEntity>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
     ) {}
 
   async createCoach(coach: CoachEntity): Promise<CoachEntity> {
@@ -147,6 +150,97 @@ export class CoachService {
     }
   
     coach.qualifications.splice(qualificationIndex, 1);
+    await this.coachRepository.save(coach);
+  
+    return coach;
+  }
+  
+  private async findCoachAndUserWithRelations(coachId: number, userId: number) {
+    const coach = await this.coachRepository.findOne({
+      where: { id_coach: coachId },
+      relations: ['clients'],
+    });
+  
+    if (!coach) {
+      throw new NotFoundException('Coach not found');
+    }
+  
+    const user = await this.userRepository.findOne({
+      where: { id_user: userId },
+      relations: ['coaches'],
+    });
+  
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+  
+    return { coach, user };
+  }
+
+  async addUserToCoach(coachId: number, userId: number): Promise<CoachEntity> {
+    const { coach, user } = await this.findCoachAndUserWithRelations(coachId, userId);
+  
+    if (coach.clients.some((client) => client.id_user === userId)) {
+      throw new BadRequestException('User is already assigned to this coach');
+    }
+  
+    coach.clients.push(user);
+    await this.coachRepository.save(coach);
+  
+    return coach;
+  }
+
+  
+  async getUsersForCoach(coachId: number): Promise<UserEntity[]> {
+    const coach = await this.coachRepository.findOne({
+      where: { id_coach: coachId },
+      relations: ['clients'],
+    });
+  
+    if (!coach) {
+      throw new NotFoundException('Coach not found');
+    }
+  
+    return coach.clients;
+  }
+
+  
+  async updateUsersForCoach(
+    coachId: number,
+    newUserIds: number[],
+  ): Promise<CoachEntity> {
+    const coach = await this.coachRepository.findOne({
+      where: { id_coach: coachId },
+      relations: ['clients'],
+    });
+  
+    if (!coach) {
+      throw new NotFoundException('Coach not found');
+    }
+  
+    const newUsers = await this.userRepository.findByIds(newUserIds);
+  
+    coach.clients = newUsers;
+    await this.coachRepository.save(coach);
+  
+    return coach;
+  }
+  
+  async removeUserFromCoach(
+    coachId: number,
+    userId: number,
+  ): Promise<CoachEntity> {
+    const { coach, user } = await this.findCoachAndUserWithRelations(coachId, userId);
+  
+    const userIndex = coach.clients.findIndex(
+      (client) => client.id_user === userId,
+    );
+  
+    if (userIndex === -1) {
+      throw new NotFoundException('User not found in coach clients');
+    }
+  
+    coach.clients.splice(userIndex, 1);
     await this.coachRepository.save(coach);
   
     return coach;

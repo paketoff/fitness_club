@@ -13,6 +13,7 @@ import { CoachGenderEntity } from './coach-gender.entity';
 import { WorkoutHistoryEntity } from 'src/modules/workout-history/entities/workout-history.entity';
 import { CoachScheduleEntity } from 'src/modules/coach-schedule/entities/coach-schedule.entity';
 import { CoachQualificationEntity } from 'src/modules/coach-qualification/entities/coach-qualification.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 
 @Entity('coach')
 export class CoachEntity {
@@ -64,4 +65,12 @@ export class CoachEntity {
     inverseJoinColumn: { name: 'qualification_id', referencedColumnName: 'id_qualification' },
   })
   qualifications: CoachQualificationEntity[];
+
+  @ManyToMany(() => UserEntity, (user) => user.coaches)
+  @JoinTable({
+    name: 'users_and_coaches', 
+    joinColumn: { name: 'coach_id', referencedColumnName: 'id_coach' },
+    inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id_user' },
+  })
+  clients: UserEntity[];
 }
