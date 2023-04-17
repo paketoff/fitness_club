@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
 import { SubscriptionEntity } from './entities/subscription.entity';
 import { SubscriptionDTO } from './DTO/subscription.dto';
 
-@Controller('subscription')
+@Controller('subscriptions')
 export class SubscriptionController {
 
   constructor(private readonly subService: SubscriptionService) {}
@@ -19,10 +19,13 @@ export class SubscriptionController {
   }
 
   @Post('create-sub') 
-  async createSubscription(@Body() createSubscriptionDTO: SubscriptionDTO): Promise<SubscriptionEntity> {
+  async createSubscription(
+    @Body() createSubscriptionDTO: SubscriptionDTO,
+    @Body('user_id', ParseIntPipe) user_id: number
+    ): Promise<SubscriptionEntity> {
     const subscription = new SubscriptionEntity();
     Object.assign(subscription, createSubscriptionDTO);
-    return await this.subService.createSubscription(subscription);
+    return await this.subService.createSubscription(subscription, user_id);
   }
 
   @Put(':id')

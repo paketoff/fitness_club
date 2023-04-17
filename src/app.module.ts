@@ -22,6 +22,7 @@ import { SubscriptionTypeEntity } from './modules/subscription/entities/subscrip
 import { SubscriptionStatusEntity } from './modules/subscription/entities/subscription-status.entity';
 import { RolesGuard } from './modules/auth/guards/roles.guard';
 import { CoachQualificationEntity } from './modules/coach-qualification/entities/coach-qualification.entity';
+import { SubscriptionModule } from './modules/subscription/subscription.module';
 
 
 @Module({
@@ -61,6 +62,7 @@ import { CoachQualificationEntity } from './modules/coach-qualification/entities
     AuthModule,
     WorkoutModule,
     CoachModule,
+    SubscriptionModule,
   ],
   controllers: [AppController],
   providers: [

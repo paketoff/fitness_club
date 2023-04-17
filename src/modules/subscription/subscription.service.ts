@@ -2,18 +2,29 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SubscriptionEntity } from './entities/subscription.entity';
 import { Repository } from 'typeorm';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class SubscriptionService {
 
   constructor(
     @InjectRepository(SubscriptionEntity)
-    private readonly subRepository: Repository<SubscriptionEntity>
+    private readonly subRepository: Repository<SubscriptionEntity>,
+    private readonly userService: UserService,
   ) {}
 
-  async createSubscription(sub: SubscriptionEntity): Promise<SubscriptionEntity> {
+  async createSubscription(sub: SubscriptionEntity, user_id: number): Promise<SubscriptionEntity> {
+    const user = await this.userService.findUserById(user_id);
+  
+    if (!user) {
+      throw new NotFoundException(`User with id ${user_id} not found`);
+    }
+  
+    sub.user_id = user;
+  
     return await this.subRepository.save(sub);
   }
+  
 
   async getAllSubscriptions(): Promise<SubscriptionEntity[]> {
     return await this.subRepository.find();

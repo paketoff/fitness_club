@@ -1,5 +1,5 @@
-import { Type } from "class-transformer";
-import { IsEmail, IsInt, IsNotEmpty, IsNumber, IsString, MaxLength, ValidateNested } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import { IsEmail, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, ValidateNested } from "class-validator";
 import { CoachCategoryDTO } from "./coach-category.dto";
 import { CoachGenderDTO } from "./coach-gender.dto";
 
@@ -36,12 +36,14 @@ export class CoachDTO {
   @IsNotEmpty()
   rating: number;
 
-  @ValidateNested({each: true})
-  @Type(() => CoachCategoryDTO)
-  category_id: CoachCategoryDTO;
+  @IsOptional()
+  @IsInt()
+  @Transform(({ value }) => value === undefined || value === '' ? 1 : parseInt(value, 10))
+  category_id: number;
 
-  @ValidateNested({each: true})
-  @Type(() => CoachGenderDTO)
-  coach_gender_id: CoachGenderDTO;
+  @IsOptional()
+  @IsInt()
+  @Transform(({ value }) => value === undefined || value === '' ? 1 : parseInt(value, 10))
+  coach_gender_id: number;
 
 }

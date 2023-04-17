@@ -24,7 +24,7 @@ export class CoachScheduleDTO {
   @IsString()
   additional_info: string;
 
-  @ValidateNested()
-  @Type(() => CoachDTO)
-  coach: CoachDTO;
+  @IsInt()
+  @IsNotEmpty()
+  coach: number;
 }

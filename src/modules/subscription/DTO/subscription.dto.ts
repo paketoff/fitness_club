@@ -1,12 +1,10 @@
-import { Type } from "class-transformer";
-import { IsInt, IsNotEmpty, IsNumber, ValidateNested } from "class-validator";
-import { UserDTO } from "src/modules/user/DTO/user.dto";
-import { SubscriptionStatusDTO } from "./subscription-status.dto";
-import { SubscriptionTypeDTO } from "./subscription-type.dto";
+import { Transform, Type } from "class-transformer";
+import { IsInt, IsNotEmpty, IsNumber, IsOptional, ValidateNested } from "class-validator";
 
 
 export class SubscriptionDTO {
 
+  @IsOptional()
   @IsInt()
   id_subscription: number;
 
@@ -18,15 +16,16 @@ export class SubscriptionDTO {
   @IsNotEmpty()
   trains_count: number;
 
-  @ValidateNested({ each: true })
-  @Type(() => UserDTO)
-  user_id: UserDTO;
+  @IsInt()
+  user_id: number;
 
-  @ValidateNested({ each: true })
-  @Type(() => SubscriptionStatusDTO)
-  sub_status_id: SubscriptionStatusDTO;
+  @IsOptional()
+  @IsInt()
+  @Transform(({ value }) => value === undefined || value === '' ? 2 : parseInt(value, 10))
+  sub_status_id: number;
 
-  @ValidateNested({ each: true})
-  @Type(() => SubscriptionTypeDTO)
-  sub_type_id: SubscriptionTypeDTO;
+  @IsOptional()
+  @IsInt()
+  @Transform(({ value }) => value === undefined || value === '' ? 1 : parseInt(value, 10))
+  sub_type_id: number;
 }

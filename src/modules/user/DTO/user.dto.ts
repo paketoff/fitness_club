@@ -1,11 +1,10 @@
-import { IsEmail, IsInt, IsNotEmpty, IsNumber, IsNumberString, IsString, Matches, MaxLength, MinLength, ValidateNested } from "class-validator";
-import { UserRoleDTO } from "./user-role.dto";
-import { Type } from "class-transformer";
-import { UserStatusDTO } from "./user-status.dto";
-import { UserGenderDTO } from "./user-gender.dto";
+import { Transform } from "class-transformer";
+import { IsEmail, IsInt, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString, Matches, MaxLength, MinLength, ValidateNested } from "class-validator";
 
 
 export class UserDTO {
+
+  @IsOptional()
   @IsInt()
   id_user: number;
 
@@ -35,15 +34,18 @@ export class UserDTO {
   @IsNotEmpty()
   password: string;
 
-  @ValidateNested({each:true})
-  @Type(() => UserRoleDTO)
-  user_role_id: UserRoleDTO;
+  @IsOptional()
+  @IsInt()
+  @Transform(({ value }) => value === undefined || value === '' ? 1 : parseInt(value, 10))
+  user_role_id: number;
 
-  @ValidateNested({each: true})
-  @Type(() => UserStatusDTO)
-  user_status_id: UserStatusDTO;
+  @IsOptional()
+  @IsInt()
+  @Transform(({ value }) => value === undefined || value === '' ? 1 : parseInt(value, 10))
+  user_status_id: number;
 
-  @ValidateNested({each: true})
-  @Type(() => UserGenderDTO)
-  user_gender_id: UserGenderDTO;
+  @IsOptional()
+  @IsInt()
+  @Transform(({ value }) => value === undefined || value === '' ? 1 : parseInt(value, 10))
+  user_gender_id: number;
 }

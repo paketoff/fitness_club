@@ -23,19 +23,19 @@ export class WorkoutHistoryDTO {
   @IsNotEmpty()
   date: Date;
 
-  @ValidateNested({each: true})
-  @Type(() => UserDTO)
-  user_id: UserDTO;
+  @IsInt()
+  @IsNotEmpty()
+  user_id: number;
 
-  @ValidateNested({each: true})
-  @Type(() => CoachDTO)
-  coach_id: CoachDTO;
+  @IsInt()
+  @IsNotEmpty()
+  coach_id: number;
 
-  @ValidateNested({each: true})
-  @Type(() => WorkoutDTO)
-  workout_id: WorkoutDTO;
+  @IsInt()
+  @IsNotEmpty()
+  workout_id: number;
 
-  @ValidateNested({each: true})
-  @Type(() => WorkoutTypeDTO)
-  workout_type_id: WorkoutTypeDTO;
+  @IsInt()
+  @IsNotEmpty()
+  workout_type_id: number;
 }
