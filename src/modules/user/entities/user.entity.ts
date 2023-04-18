@@ -1,10 +1,10 @@
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
-import { UserRoleEntity } from "./user-role.entity";
 import { UserGenderEntity } from "./user-gender.entity";
 import { UserStatusEntity } from "./user-status.entity";
 import { SubscriptionEntity } from "src/modules/subscription/entities/subscription.entity";
 import { WorkoutHistoryEntity } from "src/modules/workout-history/entities/workout-history.entity";
 import { CoachEntity } from "src/modules/coach/entities/coach.entity";
+import { RoleEntity } from "./role.entity";
 
 @Entity('user')
 export class UserEntity {
@@ -26,12 +26,12 @@ export class UserEntity {
   @Column()
   password: string;
 
-  @ManyToOne(() => UserRoleEntity, (role) => role.users, {
+  @ManyToOne(() => RoleEntity, (role) => role.users, {
     onUpdate: 'CASCADE',
     onDelete: 'RESTRICT'
   })
   @JoinColumn({name: 'user_role_id'})
-  user_role_id: UserRoleEntity;
+  role_id: RoleEntity;
 
   @ManyToOne(() => UserStatusEntity, (status) => status.users, {
     onUpdate: 'CASCADE',
@@ -53,6 +53,9 @@ export class UserEntity {
   @OneToMany(() => WorkoutHistoryEntity, (workout_history) => workout_history.user)
   workout_histories: WorkoutHistoryEntity[];
 
-  @ManyToMany(() => CoachEntity, (coach) => coach.clients)
+  @ManyToMany(() => CoachEntity, (coach) => coach.clients, {
+    onUpdate: 'CASCADE',
+    onDelete: 'RESTRICT'
+  })
   coaches: CoachEntity[];
 }

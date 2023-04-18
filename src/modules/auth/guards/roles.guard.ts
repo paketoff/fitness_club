@@ -1,14 +1,15 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserRoleEntity } from "src/modules/user/entities/user-role.entity";
+import { CoachEntity } from "src/modules/coach/entities/coach.entity";
+import { RoleEntity } from "src/modules/user/entities/role.entity";
 import { Repository } from "typeorm";
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(
-    @InjectRepository(UserRoleEntity)
-    private readonly userRoleRepo: Repository<UserRoleEntity>,
+    @InjectRepository(RoleEntity)
+    private readonly roleRepo: Repository<RoleEntity>,
     private reflector: Reflector,
   ) {}
 
@@ -21,12 +22,17 @@ export class RolesGuard implements CanActivate {
       return true;
     }
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    const authEntity = request.user;
 
-    const userRole = await this.userRoleRepo.findOneBy(user.role_id);
-    if (!userRole) {
-      return false;
-    }
-    return requiredRoles.some((role) => role === userRole.role_name);
+  //authenticated entity can be an user entity and coach entity as well so I make desicion to 
+  //give a more abstract name to this variable.
+  const authEntityRole = authEntity.role_id;
+
+  if (!authEntityRole) {
+    return false;
+  }
+  return requiredRoles.some((role) => role === authEntityRole);
   }
 }
+
+

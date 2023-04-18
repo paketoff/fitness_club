@@ -51,7 +51,7 @@ export class AuthService {
     const payload = {
       id: user.id_user, 
       email: user.email, 
-      role_id: user.user_role_id.id_user_role,
+      role_id: user.role_id.id_user_role,
       name: user.name,
       surname: user.surname
     };
@@ -69,6 +69,7 @@ export class AuthService {
       rating: coach.rating,
       category_id: coach.category,
       coach_gender_id: coach.gender,
+      role_id: coach.role_id.id_user_role
     }
     return {
       access_token: this.jwtService.sign(payload),

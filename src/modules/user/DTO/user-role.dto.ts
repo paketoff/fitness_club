@@ -2,7 +2,7 @@ import { IsInt, IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validato
 import { ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
-export class UserRoleDTO {
+export class RoleDTO {
 
   @IsInt()
   id_user_role: number;

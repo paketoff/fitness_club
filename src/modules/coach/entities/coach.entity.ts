@@ -14,6 +14,7 @@ import { WorkoutHistoryEntity } from 'src/modules/workout-history/entities/worko
 import { CoachScheduleEntity } from 'src/modules/coach-schedule/entities/coach-schedule.entity';
 import { CoachQualificationEntity } from 'src/modules/coach-qualification/entities/coach-qualification.entity';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { RoleEntity } from 'src/modules/user/entities/role.entity';
 
 @Entity('coach')
 export class CoachEntity {
@@ -73,4 +74,11 @@ export class CoachEntity {
     inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id_user' },
   })
   clients: UserEntity[];
+
+  @ManyToOne(() => RoleEntity, (role) => role.coaches, {
+    onUpdate: 'CASCADE',
+    onDelete: 'RESTRICT'
+  })
+  @JoinColumn({name: 'coach_role_id'})
+  role_id: RoleEntity;
 }
