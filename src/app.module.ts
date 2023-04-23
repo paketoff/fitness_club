@@ -69,5 +69,6 @@ import { RoleEntity } from './modules/user/entities/role.entity';
     AppService,
     RolesGuard,
   ],
+  exports: [RolesGuard],
 })
 export class AppModule {}

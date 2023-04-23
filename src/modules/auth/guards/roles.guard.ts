@@ -14,7 +14,7 @@ export class RolesGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const requiredRoles = this.reflector.getAllAndOverride<Role[]>('roles', [
+    const requiredRoles = this.reflector.getAllAndOverride<string[]>('roles', [
       context.getHandler(),
       context.getClass(),
     ]);
@@ -23,15 +23,25 @@ export class RolesGuard implements CanActivate {
     }
     const request = context.switchToHttp().getRequest();
     const authEntity = request.user;
+  
+    if (!authEntity.role_id) {
+      return false;
+    }
 
-  //authenticated entity can be an user entity and coach entity as well so I make desicion to 
-  //give a more abstract name to this variable.
-  const authEntityRole = authEntity.role_id;
+    
+  
+    const userRole = await this.roleRepo.findOne({ 
+      where: {
+        id_user_role: authEntity.role_id,
+      }
+   });
 
-  if (!authEntityRole) {
-    return false;
-  }
-  return requiredRoles.some((role) => role === authEntityRole);
+  
+    if (!userRole) {
+      return false;
+    }
+  
+    return requiredRoles.some((role) => role === userRole.role_name);
   }
 }
 

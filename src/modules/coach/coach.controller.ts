@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseIntPipe, Post, Put, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { CoachService } from './coach.service';
 import { CoachEntity } from './entities/coach.entity';
 import { CoachDTO } from './DTO/coach.dto';
@@ -11,6 +11,8 @@ import { AddUserToCoachDTO } from '../users-and-coaches/DTO/add-user-to-coach.dt
 import { UserEntity } from '../user/entities/user.entity';
 import { UpdateUsersForCoachDTO } from '../users-and-coaches/DTO/update-user-for-coach.dto';
 import { RemoveUserFromCoachDTO } from '../users-and-coaches/DTO/remove-user-from-coach.dto';
+import { AuthGuard } from '../auth/guards/auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 @Controller('coaches')
 export class CoachController {
@@ -18,15 +20,30 @@ export class CoachController {
     private readonly coachService: CoachService,
       ) {}
 
-  @Roles('user')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('user', 'admin')
   @Get('get-coaches')
   async getAllCoaches():Promise<CoachEntity[]> {
     return await this.coachService.getAllCoaches();
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('coach', 'admin')
   @Get(':id')
-  async getCoachById(@Param('id') id: number): Promise<CoachEntity> {
-    return await this.coachService.getCoachById(id);
+  async getCoachById(
+    @Param('id') id: number,
+    @Req() req,
+    ): Promise<CoachEntity> {
+    const coach = await this.coachService.getCoachById(id, req.user);
+
+    if (
+      (req.user.role_name !== 'admin' && Number(req.user.id_coach) !== Number(id)) ||
+      !coach
+    ) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+  
+    return coach;
   }
 
   @Put(':id')

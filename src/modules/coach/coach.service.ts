@@ -1,10 +1,11 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CoachEntity } from './entities/coach.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { CoachQualificationEntity } from '../coach-qualification/entities/coach-qualification.entity';
 import { UserEntity } from '../user/entities/user.entity';
+import { RoleService } from '../user/role.service';
 
 
 @Injectable()
@@ -16,6 +17,7 @@ export class CoachService {
     private readonly qualificationRepository: Repository<CoachQualificationEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private readonly roleService: RoleService,
     ) {}
 
   async createCoach(coach: CoachEntity): Promise<CoachEntity> {
@@ -28,16 +30,26 @@ export class CoachService {
     return await this.coachRepository.find();
   }
 
-  async getCoachById(id: number): Promise<CoachEntity> {
+  async getCoachById(id: number, user?: any): Promise<CoachEntity> {
+    if (user) {
+      const userRole = await this.roleService.getRoleById(user.role_id);
+  
+      if (userRole.role_name === 'coach' && user.id_coach === id) {
+        throw new UnauthorizedException();
+      }
+    }
+  
     return await this.coachRepository.findOne({
-      where: {id_coach: id}
+      where: { id_coach: id },
+      relations: ['role_id'],
     });
   }
 
   async findCoachByEmail(email: string): Promise<CoachEntity | undefined> {
     return await this.coachRepository.findOne(
       {
-        where: {email: email}
+        where: {email: email},
+        relations: ['role_id', 'category', 'gender'],
       }
     )
   }

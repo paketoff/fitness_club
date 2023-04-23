@@ -62,15 +62,17 @@ export class AuthService {
 
   async loginCoach(coach: Omit<CoachEntity, 'password'>) {
     const payload  = {
-      id: coach.id_coach,
+      id_coach: coach.id_coach,
       email: coach.email,
       name: coach.name,
       surname: coach.surname,
       rating: coach.rating,
-      category_id: coach.category,
-      coach_gender_id: coach.gender,
-      role_id: coach.role_id.id_user_role
+      category_id: coach.category.id_category, 
+      coach_gender_id: coach.gender.id_coach_gender, 
+      role_id: coach.role_id.id_user_role,
+      role_name: coach.role_id.role_name,
     }
+    console.log(payload);
     return {
       access_token: this.jwtService.sign(payload),
     };

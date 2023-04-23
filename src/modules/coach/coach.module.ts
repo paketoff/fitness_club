@@ -11,6 +11,8 @@ import { UserModule } from '../user/user.module';
 import { UserService } from '../user/user.service';
 import { UserController } from '../user/user.controller';
 import { UserEntity } from '../user/entities/user.entity';
+import { RoleEntity } from '../user/entities/role.entity';
+import { RoleService } from '../user/role.service';
 
 @Module({
   imports: [
@@ -18,11 +20,12 @@ import { UserEntity } from '../user/entities/user.entity';
       CoachEntity, 
       CoachQualificationEntity,
       UserEntity,
+      RoleEntity,
     ]),
     CoachQualificationModule,
     UserModule,
   ],
-  providers: [CoachService, CoachQualificationService, UserService],
+  providers: [CoachService, CoachQualificationService, UserService, RoleService],
   controllers: [CoachController, CoachQualificationController, UserController],
   exports: [CoachService]
 })

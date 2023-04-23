@@ -34,8 +34,8 @@ export class AuthController {
   }
 
   @Post('register-coach')
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @Roles('admin')
   async registerCoach(@Body() createCoachDTO: CoachDTO): Promise<CoachEntity> {
     const coachEntity = new CoachEntity();
     Object.assign(coachEntity, createCoachDTO);
