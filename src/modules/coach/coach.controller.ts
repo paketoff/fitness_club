@@ -135,6 +135,7 @@ export class CoachController {
     return await this.coachService.getUsersForCoach(coach_id, req.user);
   }
 
+  //TODO: add ID's to req-URL to implement the auth functionality.
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'coach')
   @Put('update-users-for-coach')
@@ -149,6 +150,7 @@ export class CoachController {
     );
   }
 
+  //TODO: add ID's to req-URL to implement the auth functionality.
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'coach')
   @Post('remove-user-from-coach')

@@ -70,6 +70,11 @@ export class CoachService {
     if (!coach) {
       throw new NotFoundException(`Coach with id ${id} was not found!`);
     }
+
+    if (updatedData.password) {
+      const salt = await bcrypt.genSalt(12);
+      coach.password = await bcrypt.hash(updatedData.password, salt);
+    }
     
     Object.assign(coach, updatedData);
     return await this.coachRepository.save(coach);
