@@ -46,16 +46,21 @@ export class CoachController {
     return coach;
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('coach', 'admin')
   @Put(':id')
   async updateCoachById(
     @Param('id') id: number,
+    @Req() req,
     @Body() updatedData: CoachDTO
   ): Promise<CoachEntity | null> {
     const coachEntityUpd = new CoachEntity();
     Object.assign(coachEntityUpd, updatedData);
-    return await this.coachService.updateCoachById(id, coachEntityUpd);
+    return await this.coachService.updateCoachById(id, coachEntityUpd, req.user);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
   @Delete(':id')
   async deleteCoachById(
     @Param('id') id: number,
@@ -63,6 +68,8 @@ export class CoachController {
     return await this.coachService.deleteCoachById(id);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
   @Post('add-qualification-to-coach')
   async addQualificationToCoach(
     @Body() addQualificationToCoachDTO: AddQualificationToCoachDTO
@@ -72,6 +79,8 @@ export class CoachController {
       addQualificationToCoachDTO.qualification_id);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'coach')
   @Get('get-qualifications-for-coach/:id')
   async getQualificationsForCoach(
     @Param('id') coach_id: number,
@@ -79,6 +88,8 @@ export class CoachController {
     return await this.coachService.getQualificationsForCoach(coach_id);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
   @Put('update-qualifications-for-coach')
   async updateQualificationsForCoach(
     @Body() updateQualificationsForCoachDTO: UpdateQualificationsForCoachDTO,
@@ -89,6 +100,8 @@ export class CoachController {
     );
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
   @Delete('remove-qualification-from-coach')
   async removeQualificationFromCoach(
     @Body() removeQualificationFromCoachDTO: RemoveQualificationFromCoachDTO,
@@ -99,6 +112,9 @@ export class CoachController {
     );
   }
 
+  //TODO: do the analysis who has to add the user to coach. 
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @Roles('admin')
   @Post('add-user-to-coach')
   async addUserToCoach(
     @Body() addUserToCoachDTO: AddUserToCoachDTO,
@@ -107,32 +123,43 @@ export class CoachController {
       addUserToCoachDTO.coach_id,
       addUserToCoachDTO.user_id,
     );
-}
+  }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'coach')
   @Get('get-user-for-coach/:id')
   async getCoachesForUser(
     @Param('id') coach_id: number,
+    @Req() req,
   ): Promise<UserEntity[]> {
-    return await this.coachService.getUsersForCoach(coach_id);
+    return await this.coachService.getUsersForCoach(coach_id, req.user);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'coach')
   @Put('update-users-for-coach')
   async updateUsersForCoach(
     @Body() updateUsersForCoachDTO: UpdateUsersForCoachDTO,
+    @Req() req,
   ): Promise<CoachEntity> {
     return await this.coachService.updateUsersForCoach(
       updateUsersForCoachDTO.coach_id,
       updateUsersForCoachDTO.new_user_ids,
+      req.user,
     );
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'coach')
   @Post('remove-user-from-coach')
   async removeUserFromCoach(
     @Body() removeUserFromCoachDTO: RemoveUserFromCoachDTO,
+    @Req() req,
   ): Promise<CoachEntity> {
     return await this.coachService.removeUserFromCoach(
       removeUserFromCoachDTO.coach_id,
       removeUserFromCoachDTO.user_id,
+      req.user,
     );
   }
 }

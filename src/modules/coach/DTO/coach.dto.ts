@@ -6,44 +6,51 @@ import { CoachGenderDTO } from "./coach-gender.dto";
 
 export class CoachDTO {
 
+  @IsOptional()
   @IsInt()
-  id_coach: number;
+  id_coach?: number;
 
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   @MaxLength(45)
-  name: string;
+  name?: string;
 
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   @MaxLength(45)
-  surname: string;
+  surname?: string;
 
+  @IsOptional()
   @IsNumber()
   @IsNotEmpty()
-  salary: number;
+  salary?: number;
 
+  @IsOptional()
   @IsString()
   @MaxLength(45)
   @IsEmail()
-  email: string;
+  email?: string;
 
+  @IsOptional()
   @IsString()
   @MaxLength(255)
-  password: string;
+  password?: string;
 
+  @IsOptional()
   @IsNumber()
   @IsNotEmpty()
-  rating: number;
+  rating?: number;
 
   @IsOptional()
   @IsInt()
   @Transform(({ value }) => value === undefined || value === '' ? 1 : parseInt(value, 10))
-  category_id: number;
+  category_id?: number;
 
   @IsOptional()
   @IsInt()
   @Transform(({ value }) => value === undefined || value === '' ? 1 : parseInt(value, 10))
-  coach_gender_id: number;
+  coach_gender_id?: number;
 
 }

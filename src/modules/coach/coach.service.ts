@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CoachEntity } from './entities/coach.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -54,16 +54,24 @@ export class CoachService {
     )
   }
 
-  async updateCoachById(id: number, updatedData: CoachEntity): Promise<CoachEntity | null> {
-    const coach = await this.coachRepository.preload({
-      id_coach: id,
-      ...updatedData
+  async updateCoachById(id: number, updatedData: CoachEntity, user?: any,): Promise<CoachEntity | null> {
+    if ((user.role_name !== 'admin' && Number(user.id_coach) !== Number(id)) ||
+      !(await this.getCoachById(id, user))
+    ) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+  
+    const coach = await this.coachRepository.findOne({
+      where: {
+        id_coach: id,
+      }
     });
 
-    if(!coach) {
+    if (!coach) {
       throw new NotFoundException(`Coach with id ${id} was not found!`);
     }
-
+    
+    Object.assign(coach, updatedData);
     return await this.coachRepository.save(coach);
   }
 
@@ -203,14 +211,21 @@ export class CoachService {
   }
 
   
-  async getUsersForCoach(coachId: number): Promise<UserEntity[]> {
+  async getUsersForCoach(coachId: number, user?: any): Promise<UserEntity[]> {
+
+    if ((user.role_name !== 'admin' && Number(user.id_coach) !== Number(coachId)) ||
+      !(await this.getCoachById(coachId, user))
+    ) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+
     const coach = await this.coachRepository.findOne({
       where: { id_coach: coachId },
       relations: ['clients'],
     });
   
     if (!coach) {
-      throw new NotFoundException('Coach not found');
+      throw new NotFoundException(`Coach with id: ${coachId} not found.`);
     }
   
     return coach.clients;
@@ -220,7 +235,15 @@ export class CoachService {
   async updateUsersForCoach(
     coachId: number,
     newUserIds: number[],
+    user?: any,
   ): Promise<CoachEntity> {
+
+    if ((user.role_name !== 'admin' && Number(user.id_coach) !== Number(coachId)) ||
+      !(await this.getCoachById(coachId, user))
+    ) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+
     const coach = await this.coachRepository.findOne({
       where: { id_coach: coachId },
       relations: ['clients'],
@@ -241,7 +264,15 @@ export class CoachService {
   async removeUserFromCoach(
     coachId: number,
     userId: number,
+    authUser?: any,
   ): Promise<CoachEntity> {
+
+    if ((authUser.role_name !== 'admin' && Number(authUser.id_coach) !== Number(coachId)) ||
+      !(await this.getCoachById(coachId, authUser))
+    ) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+
     const { coach, user } = await this.findCoachAndUserWithRelations(coachId, userId);
   
     const userIndex = coach.clients.findIndex(
