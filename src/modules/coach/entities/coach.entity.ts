@@ -75,10 +75,12 @@ export class CoachEntity {
   })
   clients: UserEntity[];
 
+
+  //TODO: change the name to 'role'
   @ManyToOne(() => RoleEntity, (role) => role.coaches, {
     onUpdate: 'CASCADE',
     onDelete: 'RESTRICT'
   })
   @JoinColumn({name: 'coach_role_id'})
-  role_id: RoleEntity;
+  role: RoleEntity;
 }

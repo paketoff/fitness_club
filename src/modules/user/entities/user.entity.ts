@@ -31,21 +31,21 @@ export class UserEntity {
     onDelete: 'RESTRICT'
   })
   @JoinColumn({name: 'user_role_id'})
-  role_id: RoleEntity;
+  user_role: RoleEntity;
 
   @ManyToOne(() => UserStatusEntity, (status) => status.users, {
     onUpdate: 'CASCADE',
     onDelete: 'RESTRICT'
   })
   @JoinColumn({name: 'client_status_id'})
-  user_status_id: UserStatusEntity;
+  user_status: UserStatusEntity;
 
   @ManyToOne(() => UserGenderEntity, (gender) => gender.users, {
     onUpdate: 'CASCADE',
     onDelete: 'RESTRICT'
   })
   @JoinColumn({name: 'gender_id'})
-  user_gender_id: UserGenderEntity;
+  user_gender: UserGenderEntity;
 
   @OneToMany(() => SubscriptionEntity, (sub) => sub.user_id)
   subscriptions: SubscriptionEntity[];

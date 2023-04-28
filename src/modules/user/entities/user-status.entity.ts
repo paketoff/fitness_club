@@ -10,6 +10,6 @@ export class UserStatusEntity {
   @Column()
   user_status_name: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.user_status_id)
+  @ManyToOne(() => UserEntity, (user) => user.user_status)
   users: UserEntity[];
 }

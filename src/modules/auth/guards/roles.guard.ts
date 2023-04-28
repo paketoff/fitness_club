@@ -14,7 +14,7 @@ export class RolesGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const requiredRoles = this.reflector.getAllAndOverride<string[]>('roles', [
+    const requiredRoles = this.reflector.getAllAndOverride<Role[]>('roles', [
       context.getHandler(),
       context.getClass(),
     ]);
@@ -30,18 +30,18 @@ export class RolesGuard implements CanActivate {
 
     
   
-    const userRole = await this.roleRepo.findOne({ 
+    const authEntityRole = await this.roleRepo.findOne({ 
       where: {
         id_user_role: authEntity.role_id,
       }
    });
 
   
-    if (!userRole) {
+    if (!authEntityRole) {
       return false;
     }
   
-    return requiredRoles.some((role) => role === userRole.role_name);
+    return requiredRoles.some((role) => role === authEntityRole.role_name);
   }
 }
 

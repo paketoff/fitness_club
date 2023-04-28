@@ -11,9 +11,9 @@ export class RoleEntity {
   @Column()
   role_name: string;
 
-  @OneToMany(() => UserEntity, (user) => user.role_id)
+  @OneToMany(() => UserEntity, (user) => user.user_role)
   users: UserEntity[];
 
-  @OneToMany(() => CoachEntity, (coach) => coach.role_id)
+  @OneToMany(() => CoachEntity, (coach) => coach.role)
   coaches: CoachEntity[];
 }

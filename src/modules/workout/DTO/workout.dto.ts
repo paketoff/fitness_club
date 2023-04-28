@@ -2,7 +2,7 @@ import { IsDate, IsInt, IsNotEmpty, IsNumber, IsString, MaxLength } from "class-
 
 
 export class WorkoutDTO {
-  @IsNumber()
+  @IsInt()
   id_workout: number;
 
   @IsString()

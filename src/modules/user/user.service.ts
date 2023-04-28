@@ -22,7 +22,7 @@ export class UserService {
   async findUserByEmail(email: string): Promise<UserEntity | undefined> {
     return await this.userRepository.findOne({
       where: { email },
-      relations: ['user_role_id'] 
+      relations: ['user_role'] 
     });
   }
 

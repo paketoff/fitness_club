@@ -41,7 +41,7 @@ export class CoachService {
   
     return await this.coachRepository.findOne({
       where: { id_coach: id },
-      relations: ['role_id'],
+      relations: ['role'],
     });
   }
 
@@ -49,7 +49,7 @@ export class CoachService {
     return await this.coachRepository.findOne(
       {
         where: {email: email},
-        relations: ['role_id', 'category', 'gender'],
+        relations: ['role', 'category', 'gender'],
       }
     )
   }

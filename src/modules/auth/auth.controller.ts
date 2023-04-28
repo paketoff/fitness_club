@@ -34,6 +34,7 @@ export class AuthController {
   }
 
   @Post('register-coach')
+  //TODO: uncomment decorators below and don't remeber to push it.
   // @UseGuards(AuthGuard, RolesGuard)
   // @Roles('admin')
   async registerCoach(@Body() createCoachDTO: CoachDTO): Promise<CoachEntity> {

@@ -51,9 +51,9 @@ export class AuthService {
     const payload = {
       id: user.id_user, 
       email: user.email, 
-      role_id: user.role_id.id_user_role,
+      role_id: user.user_role.id_user_role,
       name: user.name,
-      surname: user.surname
+      surname: user.surname,
     };
     return {
       access_token: this.jwtService.sign(payload),
@@ -69,10 +69,9 @@ export class AuthService {
       rating: coach.rating,
       category_id: coach.category.id_category, 
       coach_gender_id: coach.gender.id_coach_gender, 
-      role_id: coach.role_id.id_user_role,
-      role_name: coach.role_id.role_name,
+      role_id: coach.role.id_user_role,
+      role_name: coach.role.role_name,
     }
-    console.log(payload);
     return {
       access_token: this.jwtService.sign(payload),
     };

@@ -10,6 +10,6 @@ export class UserGenderEntity {
   @Column()
   user_gender_name: string;
 
-  @OneToMany(() => UserEntity, (user) => user.user_gender_id)
+  @OneToMany(() => UserEntity, (user) => user.user_gender)
   users: UserEntity[];
 }
