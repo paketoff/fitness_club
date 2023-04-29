@@ -10,7 +10,7 @@ export class SubscriptionStatusEntity {
   @Column()
   status_name: number;
 
-  @OneToMany(() => SubscriptionEntity, (sub) => sub.subscriptionStatus_id)
+  @OneToMany(() => SubscriptionEntity, (sub) => sub.subscriptionStatus)
   subscriptions: SubscriptionEntity[];
   
 }

@@ -31,14 +31,6 @@ export class CoachService {
   }
 
   async getCoachById(id: number, user?: any): Promise<CoachEntity> {
-    if (user) {
-      const userRole = await this.roleService.getRoleById(user.role_id);
-  
-      if (userRole.role_name === 'coach' && user.id_coach === id) {
-        throw new UnauthorizedException();
-      }
-    }
-  
     return await this.coachRepository.findOne({
       where: { id_coach: id },
       relations: ['role'],
@@ -80,7 +72,11 @@ export class CoachService {
     return await this.coachRepository.save(coach);
   }
 
-  async deleteCoachById(id: number): Promise<void> {
+  async deleteCoachById(id: number, user?: any): Promise<void> {
+    if ((user.role_name !== 'admin')) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+
     const result = await this.coachRepository.delete(id);
 
     if(result.affected === 0) {
@@ -88,7 +84,11 @@ export class CoachService {
     }
   }
 
-  async addQualificationToCoach(coachId: number, qualificationId: number): Promise<CoachEntity> {
+  async addQualificationToCoach(coachId: number, qualificationId: number, user?:any): Promise<CoachEntity> {
+    if ((user.role_name !== 'admin')) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+
     const coach = await this.coachRepository.findOne({
       where: {
         id_coach: coachId,
@@ -112,7 +112,13 @@ export class CoachService {
     return coach;
   }
   
-  async getQualificationsForCoach(coachId: number): Promise<CoachQualificationEntity[]> {
+  async getQualificationsForCoach(coachId: number, user?: any): Promise<CoachQualificationEntity[]> {
+    if ((user.role_name !== 'admin' && Number(user.id_coach) !== Number(coachId)) ||
+      !(await this.getCoachById(coachId, user))
+    ) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+
     const coach = await this.coachRepository.findOne({
       where: {
         id_coach: coachId,
@@ -130,7 +136,12 @@ export class CoachService {
   async updateQualificationsForCoach(
     coachId: number,
     newQualificationIds: number[],
+    user?: any,
   ): Promise<CoachEntity> {
+    if ((user.role_name !== 'admin')) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+
     const coach = await this.coachRepository.findOne({
       where: {
         id_coach: coachId,
@@ -154,7 +165,12 @@ export class CoachService {
   async removeQualificationFromCoach(
     coachId: number,
     qualificationId: number,
+    user?: any,
   ): Promise<CoachEntity> {
+    if ((user.role_name !== 'admin')) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+
     const coach = await this.coachRepository.findOne({
       where: {
         id_coach: coachId,
@@ -202,7 +218,11 @@ export class CoachService {
     return { coach, user };
   }
 
-  async addUserToCoach(coachId: number, userId: number): Promise<CoachEntity> {
+  async addUserToCoach(coachId: number, userId: number, authUser?: any): Promise<CoachEntity> {
+    if ((authUser.role_name !== 'admin')) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+
     const { coach, user } = await this.findCoachAndUserWithRelations(coachId, userId);
   
     if (coach.clients.some((client) => client.id_user === userId)) {

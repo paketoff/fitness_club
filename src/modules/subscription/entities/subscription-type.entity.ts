@@ -10,6 +10,6 @@ export class SubscriptionTypeEntity {
   @Column()
   type_name: string;
 
-  @OneToMany(() => SubscriptionEntity, (subscription) => subscription.subscriptionType_id)
+  @OneToMany(() => SubscriptionEntity, (subscription) => subscription.subscriptionType)
   subscriptions: SubscriptionEntity[];
 }

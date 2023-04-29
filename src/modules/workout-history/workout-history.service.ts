@@ -12,41 +12,36 @@ export class WorkoutHistoryService {
     private readonly coachRepo: Repository<CoachEntity>,
   ) {}
 
-  async getAllHistory(): Promise<WorkoutHistoryEntity[]> {
-    return await this.workoutHistoryRepo.find();
+  async getAllHistory(user: any): Promise<WorkoutHistoryEntity[]> {
+    if (user.role === 'admin') {
+      return await this.workoutHistoryRepo.find();
+    } else {
+      return await this.workoutHistoryRepo.find({ where: { user: user } });
+    }
   }
 
-  async getHistoryById(id: number): Promise<WorkoutHistoryEntity> {
-    return await this.workoutHistoryRepo.findOne({
-      where: {
-        id_history: id,
-      }
-    })
-  }
+  async getHistoryById(id: number, user: any): Promise<WorkoutHistoryEntity> {
+    const history = await this.workoutHistoryRepo.findOne({
+      where: { id_history: id },
+      relations: ['user'],
+    });
 
-  //TODO: провести анализ на надобность этого функционала.
-  // async getHistoryByCoachId(id_coach: number): Promise<WorkoutHistoryEntity> {
-    
-  //   const coach = await this.coachRepo.findOne({
-  //     where: {id_coach: id_coach}
-  //   })
-    
-  //   return await this.workoutHistoryRepo.findOneBy({
-  //     coach: coach
-  //   })
-  // }
+    if (user.role !== 'admin' && history.user.id_user!== user.id) {
+      throw new NotFoundException(`Workout history with id ${id} not found`);
+    }
+
+    return history;
+  }
 
   async createHistory(workoutHistory: WorkoutHistoryEntity): Promise<WorkoutHistoryEntity> {
     return this.workoutHistoryRepo.save(workoutHistory);
   }
 
-  async updateHistoryById(id: number, updatedData): Promise<WorkoutHistoryEntity | null> {
-    const workout = await this.workoutHistoryRepo.preload({
-      id_history: id,
-      ...updatedData,
-    });
+  async updateHistoryById(id: number, updatedData, user: any): Promise<WorkoutHistoryEntity | null> {
 
-    if(!workout) {
+    const workout = await this.workoutHistoryRepo.preload({ id_history: id, ...updatedData });
+
+    if (!workout || (user.role !== 'admin' && workout.user.id_user !== user.id)) {
       throw new NotFoundException(`Workout with ${id} not found!`);
     }
 

@@ -24,7 +24,6 @@ export class UserController {
   @Get('get-users')
   async getUserById(
     @Param('id') id: number,
-    @Req() req,
   ): Promise<UserEntity> {
     return await this.userService.findUserById(id);
   }
@@ -48,6 +47,4 @@ export class UserController {
   async deleteUserById(@Param('id') id: number): Promise<void> {
     return await this.userService.deleteUserById(id);
   }
-
-
 }

@@ -47,7 +47,7 @@ export class UserEntity {
   @JoinColumn({name: 'gender_id'})
   user_gender: UserGenderEntity;
 
-  @OneToMany(() => SubscriptionEntity, (sub) => sub.user_id)
+  @OneToMany(() => SubscriptionEntity, (sub) => sub.user)
   subscriptions: SubscriptionEntity[];
 
   @OneToMany(() => WorkoutHistoryEntity, (workout_history) => workout_history.user)

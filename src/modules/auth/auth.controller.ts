@@ -33,10 +33,9 @@ export class AuthController {
     return await this.authService.loginUser(user);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
   @Post('register-coach')
-  //TODO: uncomment decorators below and don't remeber to push it.
-  // @UseGuards(AuthGuard, RolesGuard)
-  // @Roles('admin')
   async registerCoach(@Body() createCoachDTO: CoachDTO): Promise<CoachEntity> {
     const coachEntity = new CoachEntity();
     Object.assign(coachEntity, createCoachDTO);

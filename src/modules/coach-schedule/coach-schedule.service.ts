@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CoachScheduleEntity } from './entities/coach-schedule.entity';
 import { Repository } from 'typeorm';
@@ -23,11 +23,21 @@ export class CoachScheduleService {
     )
   }
 
-  async createCoachSchedule(schedule: CoachScheduleEntity): Promise<CoachScheduleEntity> {
+  async createCoachSchedule(schedule: CoachScheduleEntity, user?: any): Promise<CoachScheduleEntity> {
+    if (user.role_name !== 'admin' && user.id_coach !== schedule.coach.id_coach) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+
     return await this.coachScheduleRepo.save(schedule);
   }
 
-  async updateCoachScheduleById(id: number, updatedData: CoachScheduleEntity): Promise<CoachScheduleEntity> {
+  async updateCoachScheduleById(id: number, updatedData: CoachScheduleEntity, user?: any): Promise<CoachScheduleEntity> {
+    const schedule = await this.getCoachScheduleById(id);
+
+    if (user.role_name !== 'admin' && user.id_coach !== schedule.coach.id_coach) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+
     const scheduleUpd = await this.coachScheduleRepo.preload({
       id_schedule: id,
       ...updatedData,
@@ -40,7 +50,13 @@ export class CoachScheduleService {
     return await this.coachScheduleRepo.save(scheduleUpd);
   }
 
-  async deleteCoachScheduleById(id: number): Promise<void> {
+  async deleteCoachScheduleById(id: number, user?: any): Promise<void> {
+    const schedule = await this.getCoachScheduleById(id);
+
+    if (user.role_name !== 'admin' && user.id_coach !== schedule.coach.id_coach) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+
     const result = await this.coachScheduleRepo.delete(id);
 
     if(result.affected === 0) {

@@ -20,19 +20,19 @@ export class SubscriptionEntity {
     onDelete: 'RESTRICT',
   })
   @JoinColumn({ name: 'user_id'})
-  user_id: UserEntity;
+  user: UserEntity;
 
   @ManyToOne(() => SubscriptionTypeEntity, (sub_type) => sub_type.id_subscription_type, {
     onUpdate: 'CASCADE',
     onDelete: 'RESTRICT',
   })
   @JoinColumn({name: 'subscription_type_id'})
-  subscriptionType_id: SubscriptionTypeEntity;
+  subscriptionType: SubscriptionTypeEntity;
 
   @ManyToOne(() => SubscriptionStatusEntity, (sub_status) => sub_status.id_subscription_status, {
     onUpdate: 'CASCADE',
     onDelete: 'RESTRICT',
   })
   @JoinColumn({name: 'subscription_status_id'})
-  subscriptionStatus_id: SubscriptionStatusEntity;
+  subscriptionStatus: SubscriptionStatusEntity;
 }
