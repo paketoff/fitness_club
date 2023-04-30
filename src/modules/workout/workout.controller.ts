@@ -11,8 +11,7 @@ export class WorkoutController {
 
   constructor(private readonly workoutService: WorkoutService) {}
 
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'user')
+  
   @Get('get-workouts')
   async getAllWorkouts(): Promise<WorkoutEntity[]> {
     return await this.workoutService.getAllWorkouts();

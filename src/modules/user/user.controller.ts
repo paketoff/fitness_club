@@ -20,7 +20,7 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'user', 'coach')
+  @Roles('admin', 'coach')
   @Get('get-users')
   async getUserById(
     @Param('id') id: number,

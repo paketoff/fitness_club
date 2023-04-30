@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WorkoutHistoryEntity } from './entities/workout-history.entity';
 import { Repository } from 'typeorm';
@@ -9,14 +9,15 @@ export class WorkoutHistoryService {
   constructor(
     @InjectRepository(WorkoutHistoryEntity)
     private readonly workoutHistoryRepo: Repository<WorkoutHistoryEntity>, 
-    private readonly coachRepo: Repository<CoachEntity>,
   ) {}
 
   async getAllHistory(user: any): Promise<WorkoutHistoryEntity[]> {
     if (user.role === 'admin') {
       return await this.workoutHistoryRepo.find();
     } else {
-      return await this.workoutHistoryRepo.find({ where: { user: user } });
+      return await this.workoutHistoryRepo.find({ where: 
+        { user: user.id_user }
+       });
     }
   }
 
@@ -26,8 +27,8 @@ export class WorkoutHistoryService {
       relations: ['user'],
     });
 
-    if (user.role !== 'admin' && history.user.id_user!== user.id) {
-      throw new NotFoundException(`Workout history with id ${id} not found`);
+    if (user.role !== 'admin' || user.role !== 'coach' && history.user.id_user!== user.id) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
     }
 
     return history;
@@ -41,8 +42,8 @@ export class WorkoutHistoryService {
 
     const workout = await this.workoutHistoryRepo.preload({ id_history: id, ...updatedData });
 
-    if (!workout || (user.role !== 'admin' && workout.user.id_user !== user.id)) {
-      throw new NotFoundException(`Workout with ${id} not found!`);
+    if ((user.role !== 'admin' && workout.user.id_user !== user.id)) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
     }
 
     return await this.workoutHistoryRepo.save(workout);

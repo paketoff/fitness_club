@@ -31,7 +31,7 @@ export class WorkoutHistoryController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
+  @Roles('admin', 'user')
   @Post('create-workout-history')
   async createWorkoutHistory(
     @Body() workoutHistoryDTO: WorkoutHistoryDTO,

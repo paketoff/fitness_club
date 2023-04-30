@@ -23,6 +23,8 @@ import { RolesGuard } from './modules/auth/guards/roles.guard';
 import { CoachQualificationEntity } from './modules/coach-qualification/entities/coach-qualification.entity';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { RoleEntity } from './modules/user/entities/role.entity';
+import { WorkoutHistoryModule } from './modules/workout-history/workout-history.module';
+import { CoachScheduleModule } from './modules/coach-schedule/coach-schedule.module';
 
 
 @Module({
@@ -63,6 +65,8 @@ import { RoleEntity } from './modules/user/entities/role.entity';
     WorkoutModule,
     CoachModule,
     SubscriptionModule,
+    WorkoutHistoryModule,
+    CoachScheduleModule,
   ],
   controllers: [AppController],
   providers: [

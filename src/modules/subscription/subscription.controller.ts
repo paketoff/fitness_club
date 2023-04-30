@@ -11,6 +11,8 @@ export class SubscriptionController {
 
   constructor(private readonly subService: SubscriptionService) {}
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
   @Get('get-all-subs') 
   async getAllSubscriptions(): Promise<SubscriptionEntity[]> {
     return await this.subService.getAllSubscriptions();
@@ -39,7 +41,7 @@ export class SubscriptionController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'user')
+  @Roles('admin')
   @Put(':id')
   async updateSubscriptionById(
     @Param('id') id: number,

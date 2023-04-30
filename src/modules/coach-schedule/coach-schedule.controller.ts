@@ -2,9 +2,9 @@ import { Body, Controller, Delete, Get, Post, Put, Req, UseGuards } from '@nestj
 import { CoachScheduleService } from './coach-schedule.service';
 import { CoachScheduleEntity } from './entities/coach-schedule.entity';
 import { CoachScheduleDTO } from './DTO/coach-schedule.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('coach-schedule')
 export class CoachScheduleController {
@@ -33,6 +33,8 @@ export class CoachScheduleController {
     return await this.coachScheduleService.createCoachSchedule(coachSchedule, req.user);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'coach')
   @Put(':id')
   async updateCoachScheduleById(
     id: number,
@@ -44,6 +46,8 @@ export class CoachScheduleController {
       return await this.coachScheduleService.updateCoachScheduleById(id, coachScheduleUpd, req.user);
     }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'coach')
   @Delete(':id')
   async deleteCoachScheduleById(
     id: number,

@@ -48,7 +48,7 @@ export class SubscriptionService {
 
     const subscription = await this.findSubscriptionById(id);
 
-    if(user.role_name !== 'admin' && user.id_user !== subscription.user.id_user) {
+    if(user.role_name !== 'admin') {
       throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
     }
 
