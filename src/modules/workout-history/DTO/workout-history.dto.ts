@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsDate, IsDateString, IsInt, IsNotEmpty, IsNumber, IsString, ValidateNested } from "class-validator";
+import { IsDate, IsDateString, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 import { CoachDTO } from "src/modules/coach/DTO/coach.dto";
 import { UserDTO } from "src/modules/user/DTO/user.dto";
 import { WorkoutTypeDTO } from "src/modules/workout/DTO/workout-type.dto";
@@ -7,6 +7,7 @@ import { WorkoutDTO } from "src/modules/workout/DTO/workout.dto";
 
 
 export class WorkoutHistoryDTO {
+  @IsOptional()
   @IsInt()
   id_history: number;
 
@@ -27,8 +28,8 @@ export class WorkoutHistoryDTO {
   @IsNotEmpty()
   user_id: number;
 
+  @IsOptional()
   @IsInt()
-  @IsNotEmpty()
   coach_id: number;
 
   @IsInt()

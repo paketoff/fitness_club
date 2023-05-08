@@ -36,7 +36,7 @@ export class UserDTO {
 
   @IsOptional()
   @IsInt()
-  @Transform(({ value }) => value === undefined || value === '' ? 1 : parseInt(value, 10))
+  @Transform(({ value }) => value === undefined || value === '' ? 3 : parseInt(value, 30))
   user_role_id: number;
 
   @IsOptional()

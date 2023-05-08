@@ -16,6 +16,15 @@ export class CoachScheduleController {
     return await this.coachScheduleService.getAllCoachSchedule();
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'coach')
+  @Get('check-coach-schedule')
+  async getScheduleForCoach(
+    @Req() req,
+  ): Promise<CoachScheduleEntity[]> {
+    return await this.coachScheduleService.getCoachScheduleForCoach(req.user);
+  }
+
   @Get(':id')
   async getCoachScheduleById(id: number): Promise<CoachScheduleEntity> {
     return await this.coachScheduleService.getCoachScheduleById(id);

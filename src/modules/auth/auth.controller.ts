@@ -33,8 +33,8 @@ export class AuthController {
     return await this.authService.loginUser(user);
   }
 
-  @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin')
+  @UseGuards(AuthGuard, RolesGuard)
   @Post('register-coach')
   async registerCoach(@Body() createCoachDTO: CoachDTO): Promise<CoachEntity> {
     const coachEntity = new CoachEntity();

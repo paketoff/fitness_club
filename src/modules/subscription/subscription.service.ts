@@ -44,6 +44,32 @@ export class SubscriptionService {
     return subscription;
   }
 
+  async getUserSubscriptions(user: any): Promise<SubscriptionEntity[]> {
+    if (!user) {
+      throw new HttpException('User object not provided', HttpStatus.BAD_REQUEST);
+    }
+
+    const reqUser = await this.userService.findUserById(user.id_user);
+
+    if (!reqUser) {
+      throw new HttpException('Requested user not found', HttpStatus.NOT_FOUND);
+    }
+
+    const subscriptions = await this.subRepository.find({
+      where: {user: reqUser},
+    })
+
+    if (user.role_name !== 'admin' && user.id_user !== reqUser.id_user) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+
+    if(user.role_name == 'coach') {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+
+    return subscriptions;
+  }
+
   async updateSubscriptionById(id: number, updatedData: SubscriptionEntity, user?: any): Promise<SubscriptionEntity | null> {
 
     const subscription = await this.findSubscriptionById(id);

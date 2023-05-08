@@ -20,6 +20,15 @@ export class SubscriptionController {
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'user')
+  @Get('get-users-subscriptions')
+  async getUserSubscriptions(
+    @Req() req,
+  ): Promise<SubscriptionEntity[]> {
+    return await this.subService.getUserSubscriptions(req.user);
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'user')
   @Get(':id')
   async getSubscriptionById(
     @Param('id') id:number,
@@ -27,6 +36,7 @@ export class SubscriptionController {
     ): Promise<SubscriptionEntity> {
     return await this.subService.findSubscriptionById(id, req.user);
   }
+
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin')

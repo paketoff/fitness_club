@@ -12,12 +12,21 @@ export class WorkoutHistoryController {
   constructor(private readonly workoutHistoryService: WorkoutHistoryService) {}
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'coach', 'user')
+  @Roles('admin')
   @Get('get-all-history')
   async getAllWorkoutHistory(
     @Req() req,
   ): Promise<WorkoutHistoryEntity[]> {
     return await this.workoutHistoryService.getAllHistory(req.user);
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'coach', 'user')
+  @Get('user-history')
+  async getWorkoutHistoryByUserId(
+    @Req() req,
+  ): Promise<WorkoutHistoryEntity[]> {
+    return await this.workoutHistoryService.getHistoryByUserId(req.user);
   }
 
   @UseGuards(AuthGuard, RolesGuard)
@@ -31,14 +40,15 @@ export class WorkoutHistoryController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'user')
+  @Roles('admin', 'coach')
   @Post('create-workout-history')
   async createWorkoutHistory(
     @Body() workoutHistoryDTO: WorkoutHistoryDTO,
+    @Req() req,
     ): Promise<WorkoutHistoryEntity> {
     const workoutHistory = new WorkoutHistoryEntity();
     Object.assign(workoutHistory, workoutHistoryDTO);
-    return await this.workoutHistoryService.createHistory(workoutHistory);
+    return await this.workoutHistoryService.createHistory(workoutHistory, req.user);
   }
 
   @UseGuards(AuthGuard, RolesGuard)
