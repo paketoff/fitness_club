@@ -25,6 +25,9 @@ import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { RoleEntity } from './modules/user/entities/role.entity';
 import { WorkoutHistoryModule } from './modules/workout-history/workout-history.module';
 import { CoachScheduleModule } from './modules/coach-schedule/coach-schedule.module';
+import { AnswersModule } from './modules/answers/answers.module';
+import { QuestionsModule } from './modules/questions/questions.module';
+import { ProductionModule } from './modules/production/production.module';
 
 
 @Module({
@@ -67,6 +70,9 @@ import { CoachScheduleModule } from './modules/coach-schedule/coach-schedule.mod
     SubscriptionModule,
     WorkoutHistoryModule,
     CoachScheduleModule,
+    AnswersModule,
+    QuestionsModule,
+    ProductionModule,
   ],
   controllers: [AppController],
   providers: [

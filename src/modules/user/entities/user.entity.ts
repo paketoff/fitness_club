@@ -5,6 +5,7 @@ import { SubscriptionEntity } from "src/modules/subscription/entities/subscripti
 import { WorkoutHistoryEntity } from "src/modules/workout-history/entities/workout-history.entity";
 import { CoachEntity } from "src/modules/coach/entities/coach.entity";
 import { RoleEntity } from "./role.entity";
+import { CoachScheduleEntity } from "src/modules/coach-schedule/entities/coach-schedule.entity";
 
 @Entity('user')
 export class UserEntity {
@@ -53,9 +54,9 @@ export class UserEntity {
   @OneToMany(() => WorkoutHistoryEntity, (workout_history) => workout_history.user)
   workout_histories: WorkoutHistoryEntity[];
 
-  @ManyToMany(() => CoachEntity, (coach) => coach.clients, {
+  @ManyToMany(() => CoachScheduleEntity, (coachSchedule) => coachSchedule.clients, {
     onUpdate: 'CASCADE',
     onDelete: 'RESTRICT'
   })
-  coaches: CoachEntity[];
+  coach_schedules: CoachScheduleEntity[];
 }

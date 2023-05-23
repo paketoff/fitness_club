@@ -12,6 +12,12 @@ export class SubscriptionEntity {
   @Column({type: 'decimal'})
   price: number;
 
+  @Column({type: 'date'})
+  start_period: Date;
+
+  @Column({type: 'date'})
+  end_period: Date;
+
   @Column()
   trains_count: number;
 

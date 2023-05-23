@@ -39,6 +39,9 @@ export class CoachEntity {
   @Column({ type: 'decimal' })
   rating: number;
 
+  @Column()
+  train_price: number;
+
   @ManyToOne(() => CoachCategoryEntity, (coachCategory) => coachCategory.coaches, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
@@ -67,16 +70,6 @@ export class CoachEntity {
   })
   qualifications: CoachQualificationEntity[];
 
-  @ManyToMany(() => UserEntity, (user) => user.coaches)
-  @JoinTable({
-    name: 'users_and_coaches', 
-    joinColumn: { name: 'coach_id', referencedColumnName: 'id_coach' },
-    inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id_user' },
-  })
-  clients: UserEntity[];
-
-
-  //TODO: change the name to 'role'
   @ManyToOne(() => RoleEntity, (role) => role.coaches, {
     onUpdate: 'CASCADE',
     onDelete: 'RESTRICT'
