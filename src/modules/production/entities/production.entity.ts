@@ -1,11 +1,11 @@
 import { AnswerEntity } from "src/modules/answers/entities/answer.entity";
-import { Column, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
-
+@Entity('production')
 export class ProductionEntity {
 
   @PrimaryGeneratedColumn()
-  id_productin: number;
+  id_production: number;
 
   @Column({type: 'mediumtext'})
   sql_query: string;

@@ -28,6 +28,11 @@ import { CoachScheduleModule } from './modules/coach-schedule/coach-schedule.mod
 import { AnswersModule } from './modules/answers/answers.module';
 import { QuestionsModule } from './modules/questions/questions.module';
 import { ProductionModule } from './modules/production/production.module';
+import { SurveyModule } from './modules/survey/survey.module';
+import { AnswerEntity } from './modules/answers/entities/answer.entity';
+import { QuestionEntity } from './modules/questions/entities/question.entity';
+import { ProductionEntity } from './modules/production/entities/production.entity';
+import { SurveyService } from './modules/survey/survey.service';
 
 
 @Module({
@@ -60,6 +65,9 @@ import { ProductionModule } from './modules/production/production.module';
           SubscriptionTypeEntity,
           SubscriptionStatusEntity,
           CoachQualificationEntity,
+          QuestionEntity,
+          AnswerEntity,
+          ProductionEntity,
         ],
       }),
       inject: [ConfigService],
@@ -73,6 +81,7 @@ import { ProductionModule } from './modules/production/production.module';
     AnswersModule,
     QuestionsModule,
     ProductionModule,
+    SurveyModule,
   ],
   controllers: [AppController],
   providers: [

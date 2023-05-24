@@ -1,7 +1,7 @@
 import { AnswerEntity } from "src/modules/answers/entities/answer.entity";
-import { Column, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
-
+@Entity('questions')
 export class QuestionEntity {
   @PrimaryGeneratedColumn()
   id_question: number;
