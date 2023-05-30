@@ -13,12 +13,12 @@ export class SurveyController {
   @Post('answers')
   async processAnswer(@Body() body):Promise <any> {
     const { answerId } = body;
-    const production = await this.surveyService.findProduction(answerId);
-    if (!production) {
-      throw new NotFoundException('Production not found');
-    }
-    const result = await this.surveyService.executeProduction(production);
-    return result;
+    console.log(answerId);
+    // const production = await this.surveyService.findProduction(answerId);
+    // if (!production) {
+    //   throw new NotFoundException('Production not found');
+    // }
+    return await this.surveyService.findProductionAndExecute(answerId);
   }
 }
 

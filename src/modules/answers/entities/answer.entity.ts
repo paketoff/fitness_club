@@ -16,6 +16,5 @@ export class AnswerEntity {
   question: QuestionEntity;
 
   @OneToOne(() => ProductionEntity, (production) => production.answer)
-  @JoinColumn({name: "id_answer"})
   production: ProductionEntity;
 }

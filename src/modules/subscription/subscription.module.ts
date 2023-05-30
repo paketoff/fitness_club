@@ -6,10 +6,12 @@ import { SubscriptionEntity } from './entities/subscription.entity';
 import { UserModule } from '../user/user.module';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { RoleEntity } from '../user/entities/role.entity';
+import { SubscriptionTypeEntity } from './entities/subscription-type.entity';
+import { SubscriptionStatusEntity } from './entities/subscription-status.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([SubscriptionEntity, RoleEntity]),
+    TypeOrmModule.forFeature([SubscriptionEntity, SubscriptionTypeEntity, SubscriptionStatusEntity, RoleEntity]),
     UserModule,
 ],
   providers: [SubscriptionService, RolesGuard],

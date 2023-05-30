@@ -11,5 +11,6 @@ export class ProductionEntity {
   sql_query: string;
 
   @OneToOne(() => AnswerEntity, (answer) => answer.production)
+  @JoinColumn({name: "answer_id"})
   answer: AnswerEntity;
 }
