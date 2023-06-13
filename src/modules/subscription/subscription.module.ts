@@ -8,11 +8,13 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { RoleEntity } from '../user/entities/role.entity';
 import { SubscriptionTypeEntity } from './entities/subscription-type.entity';
 import { SubscriptionStatusEntity } from './entities/subscription-status.entity';
+import { SubTypeModule } from './sub-type/sub-type.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([SubscriptionEntity, SubscriptionTypeEntity, SubscriptionStatusEntity, RoleEntity]),
     UserModule,
+    SubTypeModule,
 ],
   providers: [SubscriptionService, RolesGuard],
   controllers: [SubscriptionController]

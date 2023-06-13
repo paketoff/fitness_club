@@ -33,6 +33,7 @@ import { AnswerEntity } from './modules/answers/entities/answer.entity';
 import { QuestionEntity } from './modules/questions/entities/question.entity';
 import { ProductionEntity } from './modules/production/entities/production.entity';
 import { SurveyService } from './modules/survey/survey.service';
+import { SubTypeModule } from './modules/subscription/sub-type/sub-type.module';
 
 
 @Module({
@@ -82,6 +83,7 @@ import { SurveyService } from './modules/survey/survey.service';
     QuestionsModule,
     ProductionModule,
     SurveyModule,
+    SubTypeModule,
   ],
   controllers: [AppController],
   providers: [

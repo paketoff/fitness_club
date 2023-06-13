@@ -30,11 +30,6 @@ export class SurveyService {
     });
 
     console.log(answerId);
-    
-    // if (!answer || !answer.production) {
-    //   return null;
-    // }
-    
 
     return await this.subTypeRepository.query(answer.production.sql_query);
   }
@@ -47,16 +42,4 @@ export class SurveyService {
   async getProductionsByAnswers(answers: AnswerEntity[]): Promise<ProductionEntity[]> {
     return await this.productionRepository.findByIds(answers.map( a => a.id_answer));
   }
-
-  // async processSurvey(answerId: number): Promise<any> {
-  //   const production = await this.findProduction(answerId);
-  
-  //   if (!production) {
-  //     return null;
-  //   }
-  
-  //   const result = await this.executeProduction(production);
-  
-  //   return result;
-  // }
 }

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SubscriptionEntity } from './entities/subscription.entity';
 import { Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
+import { SubscriptionTypeEntity } from './entities/subscription-type.entity';
 
 @Injectable()
 export class SubscriptionService {
@@ -29,6 +30,7 @@ export class SubscriptionService {
   async getAllSubscriptions(): Promise<SubscriptionEntity[]> {
     return await this.subRepository.find();
   }
+
 
   async findSubscriptionById(id: number, user?: any): Promise<SubscriptionEntity> {
 

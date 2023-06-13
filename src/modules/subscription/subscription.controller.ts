@@ -5,6 +5,7 @@ import { SubscriptionDTO } from './DTO/subscription.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { SubscriptionTypeEntity } from './entities/subscription-type.entity';
 
 @Controller('subscriptions')
 export class SubscriptionController {
