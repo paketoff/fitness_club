@@ -20,8 +20,6 @@ export class CoachController {
     private readonly coachService: CoachService,
       ) {}
 
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles('user', 'admin')
   @Get('get-coaches')
   async getAllCoaches():Promise<CoachEntity[]> {
     return await this.coachService.getAllCoaches();

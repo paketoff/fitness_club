@@ -12,6 +12,28 @@ export class UserController {
     private readonly userService: UserService,
   ) {}
 
+  //TODO: add the logic for the coach
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('user', 'coach', 'admin')
+  @Put('profile')
+  async updateCurrentUser(
+    @Req() req,
+    @Body() updatedData: UserDTO,
+  ): Promise<UserEntity | null> {
+    const userEntityUpd = new UserEntity();
+    Object.assign(userEntityUpd, updatedData);
+    return await this.userService.updateCurrentUser(userEntityUpd, req.user);
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('user','coach','admin')
+  @Get('profile')
+  async getCurrentUserInfo(
+    @Req() req,
+  ): Promise<UserEntity> {
+    return await this.userService.getCurrentUserInfo(req.user);
+  }
+
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin')
   @Get('get-users')
@@ -28,8 +50,10 @@ export class UserController {
     return await this.userService.findUserById(id);
   }
 
+  
+
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'user')
+  @Roles('admin')
   @Put(':id')
   async updateUserById(
     @Param('id') id: number,

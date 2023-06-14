@@ -41,6 +41,9 @@ export class CoachEntity {
 
   @Column()
   train_price: number;
+  
+  @Column({ nullable: true })
+  img_url: string;
 
   @ManyToOne(() => CoachCategoryEntity, (coachCategory) => coachCategory.coaches, {
     onDelete: 'RESTRICT',

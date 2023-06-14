@@ -28,10 +28,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
   
-    return { 
+    const result =  { 
       ...validatedEntity, 
       role_id: payload.role_id, 
-      // role_name: validatedEntity.user_role.role_name  ?)
     };
+
+    return result;
   }
 }

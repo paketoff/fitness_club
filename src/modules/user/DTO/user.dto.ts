@@ -9,29 +9,28 @@ export class UserDTO {
   id_user: number;
 
   @IsString()
-  @IsNotEmpty()
   @MaxLength(45)
   name: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MaxLength(45)
   surname: string;
 
   @IsString()
+  @IsOptional()
   @IsEmail()
-  @IsNotEmpty()
   @MaxLength(45)
   email: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MaxLength(12)
   @MinLength(10)
   phone: string;
 
+  @IsOptional()
   @MaxLength(255)
-  @IsNotEmpty()
   password: string;
 
   @IsOptional()

@@ -27,6 +27,9 @@ export class UserEntity {
   @Column()
   password: string;
 
+  @Column()
+  img_src: string;
+
   @ManyToOne(() => RoleEntity, (role) => role.users, {
     onUpdate: 'CASCADE',
     onDelete: 'RESTRICT'

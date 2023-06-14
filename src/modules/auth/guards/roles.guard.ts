@@ -27,7 +27,6 @@ export class RolesGuard implements CanActivate {
     const authEntity = request.user;
   
     
-    
     if (!authEntity.role_id) {
       return false;
     }
@@ -39,6 +38,7 @@ export class RolesGuard implements CanActivate {
         id_user_role: authEntity.role_id,
       }
    });
+
 
   
     if (!authEntityRole) {

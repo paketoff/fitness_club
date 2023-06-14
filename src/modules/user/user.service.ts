@@ -39,6 +39,42 @@ export class UserService {
     });
   }
 
+  async getCurrentUserInfo (user_jwt: any): Promise<UserEntity> {
+
+    const id_user = user_jwt.id_user;
+
+    return await this.userRepository.findOne({
+      where: { id_user },
+      relations: ['user_role'] 
+    });
+  }
+
+  async updateCurrentUser(updatedData: Partial<UserEntity>, user_jwt: any): Promise<UserEntity> {
+  
+    let user = await this.userRepository.findOne({
+      where: {
+        id_user: user_jwt.id_user,
+      },
+    });
+  
+    if (!user) {
+      throw new NotFoundException(`User with id ${user_jwt.id_user} not found`);
+    }
+  
+    if (user.id_user !== user_jwt.id_user) {
+      throw new HttpException('User ID mismatch', HttpStatus.FORBIDDEN);
+    }
+  
+    if (updatedData.password) {
+      const salt = await bcrypt.genSalt(12);
+      user.password = await bcrypt.hash(updatedData.password, salt);
+    }
+
+    user = this.userRepository.merge(user, updatedData);
+  
+    return await this.userRepository.save(user);
+  }
+
   async updateUserById(id: number, updatedData: Partial<UserEntity>, user_jwt?: any): Promise<UserEntity> {
 
     if((user_jwt.role_name !== 'admin' && Number(user_jwt.id_user) !== Number(id)) || !(await this.findUserById(id, user_jwt))

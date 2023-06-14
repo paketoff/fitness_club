@@ -17,6 +17,9 @@ export class WorkoutEntity {
   @Column({type: 'time'})
   duration: string;
 
+  @Column({nullable: true})
+  img_src: string;
+
   @OneToMany(() => WorkoutHistoryEntity, (workout_history) => workout_history.workout)
   workout_histories: WorkoutHistoryEntity[];
 }
