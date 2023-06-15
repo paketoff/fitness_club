@@ -21,13 +21,23 @@ export class WorkoutHistoryController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'coach', 'user')
-  @Get('user-history')
-  async getWorkoutHistoryByUserId(
+  @Roles('user', 'admin')
+  @Post('book/:scheduleId')
+  async bookTraining(
     @Req() req,
-  ): Promise<WorkoutHistoryEntity[]> {
-    return await this.workoutHistoryService.getHistoryByUserId(req.user);
+    @Param('scheduleId') scheduleId: number
+  ): Promise<WorkoutHistoryEntity> {
+    return this.workoutHistoryService.bookTraining(req.user, scheduleId);
   }
+
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @Roles('admin', 'coach', 'user')
+  // @Get('user-history')
+  // async getWorkoutHistoryByUserId(
+  //   @Req() req,
+  // ): Promise<WorkoutHistoryEntity[]> {
+  //   return await this.workoutHistoryService.getHistoryByUserId(req.user);
+  // }
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'coach', 'user')

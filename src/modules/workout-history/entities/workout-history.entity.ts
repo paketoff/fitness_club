@@ -1,3 +1,4 @@
+import { CoachScheduleEntity } from "src/modules/coach-schedule/entities/coach-schedule.entity";
 import { CoachEntity } from "src/modules/coach/entities/coach.entity";
 import { UserEntity } from "src/modules/user/entities/user.entity";
 import { WorkoutTypeEntity } from "src/modules/workout/entities/workout-type.entity";

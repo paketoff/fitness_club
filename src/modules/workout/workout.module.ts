@@ -13,6 +13,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
     )
   ],
   providers: [WorkoutService, RolesGuard],
-  controllers: [WorkoutController]
+  controllers: [WorkoutController],
+  exports: [WorkoutService]
 })
 export class WorkoutModule {}

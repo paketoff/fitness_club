@@ -12,6 +12,7 @@ import { CoachEntity } from '../coach/entities/coach.entity';
     TypeOrmModule.forFeature([CoachScheduleEntity, CoachEntity, RoleEntity]),
   ],
   providers: [CoachScheduleService, RolesGuard],
-  controllers: [CoachScheduleController]
+  controllers: [CoachScheduleController],
+  exports: [CoachScheduleService]
 })
 export class CoachScheduleModule {}

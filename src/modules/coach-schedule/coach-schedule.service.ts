@@ -21,7 +21,8 @@ export class CoachScheduleService {
   async getCoachScheduleById(id: number): Promise<CoachScheduleEntity> {
     return await this.coachScheduleRepo.findOne(
       {
-        where: {id_schedule: id}
+        where: {id_schedule: id},
+        relations: ['coach'],
       }
     )
   }
