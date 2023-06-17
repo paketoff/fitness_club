@@ -24,6 +24,9 @@ export class CoachScheduleEntity {
   @Column({ type: 'time' })
   workPeriod_End: string;
 
+  @Column({ type: 'boolean', default: false })
+  isBooked: boolean;
+
   @Column({ type: 'text' })
   additional_info: string;
 

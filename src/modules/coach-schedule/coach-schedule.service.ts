@@ -15,7 +15,13 @@ export class CoachScheduleService {
   ) {}
 
   async getAllCoachSchedule(): Promise<CoachScheduleEntity[]> {
-    return await this.coachScheduleRepo.find();
+    return await this.coachScheduleRepo.find(
+      { 
+        where: { isBooked: false } ,
+        relations: ['coach'],
+      },
+      
+    );
   }
 
   async getCoachScheduleById(id: number): Promise<CoachScheduleEntity> {
@@ -63,23 +69,23 @@ export class CoachScheduleService {
     return await this.coachScheduleRepo.save(schedule);
   }
 
-  async updateCoachScheduleById(id: number, updatedData: CoachScheduleEntity, user?: any): Promise<CoachScheduleEntity> {
-    const schedule = await this.getCoachScheduleById(id);
+  async updateCoachScheduleById(id: number, updatedData: Partial<CoachScheduleEntity>, user?: any): Promise<CoachScheduleEntity> {
+    const schedule = await this.coachScheduleRepo.findOne({
+      where: {id_schedule: id},
+      relations: ['coach'],
+    });
 
-    if (user.role_name !== 'admin' && user.id_coach !== schedule.coach.id_coach) {
-      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    if (!schedule) {
+        throw new NotFoundException(`Schedule with ${id} not found!`);
     }
 
-    const scheduleUpd = await this.coachScheduleRepo.preload({
-      id_schedule: id,
-      ...updatedData,
-    })
+    // if (user.role_name !== 'admin' && user.id_coach !== schedule.coach.id_coach) {
+    //     throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    // }
 
-    if(!scheduleUpd) {
-      throw new NotFoundException(`Schedule with ${id} not found!`);
-    }
+    Object.assign(schedule, updatedData);
 
-    return await this.coachScheduleRepo.save(scheduleUpd);
+    return await this.coachScheduleRepo.save(schedule);
   }
 
   async deleteCoachScheduleById(id: number, user?: any): Promise<void> {

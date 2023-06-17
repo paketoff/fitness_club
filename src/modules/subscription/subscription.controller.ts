@@ -12,6 +12,24 @@ export class SubscriptionController {
 
   constructor(private readonly subService: SubscriptionService) {}
 
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'user')
+  @Post('create-sub/:id') 
+  async createSubscription(
+    @Param('id') sub_type_id: number,
+    @Req() req,
+    ): Promise<SubscriptionEntity> {
+    return await this.subService.createSubscription(sub_type_id, req.user);
+  }
+
+  @Get('types/:id')
+  async getSubscriptionTypeById(
+    @Param('id') id_sub_type: number
+  ): Promise<SubscriptionTypeEntity> {
+    return await this.subService.getSubscriptionTypeById(id_sub_type);
+  }
+
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin')
   @Get('get-all-subs') 
@@ -29,7 +47,7 @@ export class SubscriptionController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'user')
+  @Roles('admin', 'user', 'coach')
   @Get(':id')
   async getSubscriptionById(
     @Param('id') id:number,
@@ -39,17 +57,7 @@ export class SubscriptionController {
   }
 
 
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
-  @Post('create-sub') 
-  async createSubscription(
-    @Body() createSubscriptionDTO: SubscriptionDTO,
-    @Body('user_id', new ParseIntPipe()) user_id: number
-    ): Promise<SubscriptionEntity> {
-    const subscription = new SubscriptionEntity();
-    Object.assign(subscription, createSubscriptionDTO);
-    return await this.subService.createSubscription(subscription, user_id);
-  }
+  
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin')

@@ -35,7 +35,7 @@ export class SubscriptionEntity {
   @JoinColumn({name: 'subscription_type_id'})
   subscriptionType: SubscriptionTypeEntity;
 
-  @ManyToOne(() => SubscriptionStatusEntity, (sub_status) => sub_status.id_subscription_status, {
+  @ManyToOne(() => SubscriptionStatusEntity, (sub_status) => sub_status.id_status, {
     onUpdate: 'CASCADE',
     onDelete: 'RESTRICT',
   })

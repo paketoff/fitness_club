@@ -9,11 +9,11 @@ export class SubscriptionDTO {
   id_subscription: number;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   price: number;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   trains_count: number;
 
   @IsInt()

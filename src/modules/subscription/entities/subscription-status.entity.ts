@@ -5,7 +5,7 @@ import { SubscriptionEntity } from "./subscription.entity";
 export class SubscriptionStatusEntity {
 
   @PrimaryGeneratedColumn()
-  id_subscription_status: number;
+  id_status: number;
   
   @Column()
   status_name: number;

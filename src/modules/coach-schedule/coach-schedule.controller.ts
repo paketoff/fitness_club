@@ -43,7 +43,7 @@ export class CoachScheduleController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'coach')
+  @Roles('admin', 'coach', 'user')
   @Put(':id')
   async updateCoachScheduleById(
     id: number,

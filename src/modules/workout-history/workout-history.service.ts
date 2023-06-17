@@ -68,7 +68,12 @@ export class WorkoutHistoryService {
     const workoutHistory = new WorkoutHistoryEntity();
     Object.assign(workoutHistory, workoutHistoryData);
 
-    return this.workoutHistoryRepo.save(workoutHistory);
+    const savedWorkoutHistory = await this.workoutHistoryRepo.save(workoutHistory);
+
+    // Обновите запись в coach_schedule, установив isBooked в true
+    await this.coachScheduleService.updateCoachScheduleById(scheduleId, { isBooked: true }, user);
+
+    return savedWorkoutHistory;
   }
 
   //TODO: Fix the method below.

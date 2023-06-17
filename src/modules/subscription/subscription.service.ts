@@ -4,6 +4,7 @@ import { SubscriptionEntity } from './entities/subscription.entity';
 import { Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
 import { SubscriptionTypeEntity } from './entities/subscription-type.entity';
+import { SubscriptionStatusEntity } from './entities/subscription-status.entity';
 
 @Injectable()
 export class SubscriptionService {
@@ -11,19 +12,43 @@ export class SubscriptionService {
   constructor(
     @InjectRepository(SubscriptionEntity)
     private readonly subRepository: Repository<SubscriptionEntity>,
+    @InjectRepository(SubscriptionTypeEntity)
+    private readonly subTypeRepository: Repository<SubscriptionTypeEntity>,
+    @InjectRepository(SubscriptionStatusEntity)
+    private readonly subStatusRepository: Repository<SubscriptionStatusEntity>,
     private readonly userService: UserService,
   ) {}
 
-  async createSubscription(sub: SubscriptionEntity, user_id: number): Promise<SubscriptionEntity> {
-    const res_user = await this.userService.findUserById(user_id);
-  
-    if (!res_user) {
-      throw new NotFoundException(`User with id ${user_id} not found`);
+  async getSubscriptionTypeById(sub_type_id: number): Promise<SubscriptionTypeEntity> {
+    return await this.subTypeRepository.findOne({
+      where: {id_subscription_type: sub_type_id},
+    });
+  }
+
+  async createSubscription(sub_type_id: number, user: any): Promise<SubscriptionEntity> {
+
+    const currentDate = new Date(); // текущая дата
+    const startDate = new Date(currentDate.getTime() + (1000 * 60 * 60 * 24)); // текущая дата + 1 день
+    const endDate = new Date(startDate.getTime() + (1000 * 60 * 60 * 24 * 30)); // startDate + 30 дней
+
+    if(sub_type_id == 3) {
+      let subscription = new SubscriptionEntity();
+
+      subscription.price = 400;
+      subscription.start_period = startDate;
+      subscription.end_period = endDate;
+      subscription.trains_count = 12;
+      subscription.user = await this.userService.findUserById(user.id_user);;
+      subscription.subscriptionStatus = await this.subStatusRepository.findOne({
+        where: {id_status: 2},
+      }), 
+      subscription.subscriptionType = await this.subTypeRepository.findOne({
+        where: {id_subscription_type: 3},
+      });
+
+      return await this.subRepository.save(subscription);
     }
-  
-    sub.user = res_user;
-  
-    return await this.subRepository.save(sub);
+    
   }
   
 
