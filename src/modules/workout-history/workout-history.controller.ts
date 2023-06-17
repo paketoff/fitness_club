@@ -30,14 +30,14 @@ export class WorkoutHistoryController {
     return this.workoutHistoryService.bookTraining(req.user, scheduleId);
   }
 
-  // @UseGuards(AuthGuard, RolesGuard)
-  // @Roles('admin', 'coach', 'user')
-  // @Get('user-history')
-  // async getWorkoutHistoryByUserId(
-  //   @Req() req,
-  // ): Promise<WorkoutHistoryEntity[]> {
-  //   return await this.workoutHistoryService.getHistoryByUserId(req.user);
-  // }
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'user')
+  @Get('user-history')
+  async getUserWorkoutHistory(
+    @Req() req,
+  ): Promise<WorkoutHistoryEntity[]> {
+    return await this.workoutHistoryService.getUserWorkoutHistory(req.user);
+  }
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'coach', 'user')

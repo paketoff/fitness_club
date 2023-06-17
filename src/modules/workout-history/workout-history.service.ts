@@ -76,31 +76,31 @@ export class WorkoutHistoryService {
     return savedWorkoutHistory;
   }
 
-  //TODO: Fix the method below.
-  // async getHistoryByUserId(user: any): Promise<WorkoutHistoryEntity[]> {
-  //   if (!user) {
-  //     throw new HttpException('User object not provided', HttpStatus.BAD_REQUEST);
-  //   }
+  async getUserWorkoutHistory(user: any): Promise<WorkoutHistoryEntity[]> {
+    if (!user) {
+      throw new HttpException('User object not provided', HttpStatus.BAD_REQUEST);
+    }
   
-  //   const reqUser = await this.userRepo.findOne({
-  //     where: {id_user: user.id_user},
-  //   });
+    const reqUser = await this.userRepo.findOne({
+      where: {id_user: user.id_user},
+    });
   
   
-  //   if (!reqUser) {
-  //     throw new HttpException('Requested user not found', HttpStatus.NOT_FOUND);
-  //   }
+    if (!reqUser) {
+      throw new HttpException('Requested user not found', HttpStatus.NOT_FOUND);
+    }
   
-  //   const history = await this.workoutHistoryRepo.find({
-  //     where: {user: reqUser},
-  //   });
+    const history = await this.workoutHistoryRepo.find({
+      where: {user: reqUser},
+      relations: ['coach', 'workout', 'workout_type'],
+    });
   
-  //   if (user.role_name !== 'admin' && user.role_name !== 'coach' && user.id_user !== reqUser.id_user) {
-  //     throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
-  //   }
+    if (user.role_name !== 'admin' && user.role_name !== 'coach' && user.id_user !== reqUser.id_user) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
   
-  //   return history;
-  // }  
+    return history;
+  }  
 
   async createHistory(workoutHistory: WorkoutHistoryEntity, user: any): Promise<WorkoutHistoryEntity> {
 
