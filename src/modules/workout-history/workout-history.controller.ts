@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 import { WorkoutHistoryService } from './workout-history.service';
 import { WorkoutHistoryEntity } from './entities/workout-history.entity';
 import { WorkoutHistoryDTO } from './DTO/workout-history.dto';
@@ -35,8 +35,14 @@ export class WorkoutHistoryController {
   @Get('user-history')
   async getUserWorkoutHistory(
     @Req() req,
-  ): Promise<WorkoutHistoryEntity[]> {
-    return await this.workoutHistoryService.getUserWorkoutHistory(req.user);
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 5,
+  ): Promise<
+  { data: WorkoutHistoryEntity[], 
+    total: number, 
+    page: number, 
+    limit: number }> {
+    return await this.workoutHistoryService.getUserWorkoutHistory(req.user, {page, limit});
   }
 
   @UseGuards(AuthGuard, RolesGuard)

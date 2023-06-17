@@ -76,7 +76,12 @@ export class WorkoutHistoryService {
     return savedWorkoutHistory;
   }
 
-  async getUserWorkoutHistory(user: any): Promise<WorkoutHistoryEntity[]> {
+  async getUserWorkoutHistory(user: any, paginationOptions: { page: number, limit: number }): Promise<
+  { data: WorkoutHistoryEntity[], 
+    total: number, 
+    page: number, 
+    limit: number }> {
+      
     if (!user) {
       throw new HttpException('User object not provided', HttpStatus.BAD_REQUEST);
     }
@@ -90,16 +95,23 @@ export class WorkoutHistoryService {
       throw new HttpException('Requested user not found', HttpStatus.NOT_FOUND);
     }
   
-    const history = await this.workoutHistoryRepo.find({
-      where: {user: reqUser},
+    const [results, total] = await this.workoutHistoryRepo.findAndCount({
+      where: { user: reqUser },
       relations: ['coach', 'workout', 'workout_type'],
+      skip: (paginationOptions.page - 1) * paginationOptions.limit,
+      take: paginationOptions.limit,
     });
   
     if (user.role_name !== 'admin' && user.role_name !== 'coach' && user.id_user !== reqUser.id_user) {
       throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
     }
   
-    return history;
+    return {
+      data: results,
+      total,
+      page: paginationOptions.page,
+      limit: paginationOptions.limit
+    };
   }  
 
   async createHistory(workoutHistory: WorkoutHistoryEntity, user: any): Promise<WorkoutHistoryEntity> {
