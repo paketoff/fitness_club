@@ -12,9 +12,8 @@ export class UserController {
     private readonly userService: UserService,
   ) {}
 
-  //TODO: add the logic for the coach
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('user', 'coach', 'admin')
+  @Roles('user', 'admin')
   @Put('profile')
   async updateCurrentUser(
     @Req() req,
@@ -26,7 +25,7 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('user','coach','admin')
+  @Roles('user','admin')
   @Get('profile')
   async getCurrentUserInfo(
     @Req() req,

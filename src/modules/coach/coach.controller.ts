@@ -26,6 +26,27 @@ export class CoachController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
+  @Roles('coach','admin')
+  @Get('profile')
+  async getCurrentCoachInfo(
+    @Req() req,
+  ): Promise<CoachEntity | null> {
+    return await this.coachService.getCurrentCoachInfo(req.user);
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('coach', 'admin')
+  @Put('profile')
+  async updateCurrentCoach(
+    @Req() req,
+    @Body() updatedData: any,
+  ): Promise<CoachEntity | null> {
+    const coachEntityUpd = new CoachEntity();
+    Object.assign(coachEntityUpd, updatedData);
+    return await this.coachService.updateCurrentCoach(coachEntityUpd, req.user);
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
   @Roles('coach', 'admin')
   @Get(':id')
   async getCoachById(
@@ -109,55 +130,5 @@ export class CoachController {
     );
   }
 
-  // @UseGuards(AuthGuard, RolesGuard)
-  // @Roles('admin')
-  // @Post('add-user-to-coach')
-  // async addUserToCoach(
-  //   @Body() addUserToCoachDTO: AddUserToCoachDTO,
-  //   @Req() req,
-  // ): Promise<CoachEntity> {
-  //   return await this.coachService.addUserToCoach(
-  //     addUserToCoachDTO.coach_id,
-  //     addUserToCoachDTO.user_id,
-  //     req.user,
-  //   );
-  // }
-
-  // @UseGuards(AuthGuard, RolesGuard)
-  // @Roles('admin', 'coach')
-  // @Get('get-user-for-coach/:id')
-  // async getCoachesForUser(
-  //   @Param('id') coach_id: number,
-  //   @Req() req,
-  // ): Promise<UserEntity[]> {
-  //   return await this.coachService.getUsersForCoach(coach_id, req.user);
-  // }
-
-  // @UseGuards(AuthGuard, RolesGuard)
-  // @Roles('admin', 'coach')
-  // @Put('update-users-for-coach')
-  // async updateUsersForCoach(
-  //   @Body() updateUsersForCoachDTO: UpdateUsersForCoachDTO,
-  //   @Req() req,
-  // ): Promise<CoachEntity> {
-  //   return await this.coachService.updateUsersForCoach(
-  //     updateUsersForCoachDTO.coach_id,
-  //     updateUsersForCoachDTO.new_user_ids,
-  //     req.user,
-  //   );
-  // }
-
-  // @UseGuards(AuthGuard, RolesGuard)
-  // @Roles('admin', 'coach')
-  // @Post('remove-user-from-coach')
-  // async removeUserFromCoach(
-  //   @Body() removeUserFromCoachDTO: RemoveUserFromCoachDTO,
-  //   @Req() req,
-  // ): Promise<CoachEntity> {
-  //   return await this.coachService.removeUserFromCoach(
-  //     removeUserFromCoachDTO.coach_id,
-  //     removeUserFromCoachDTO.user_id,
-  //     req.user,
-  //   );
-  // }
+  
 }

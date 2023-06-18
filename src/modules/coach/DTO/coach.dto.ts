@@ -31,6 +31,7 @@ export class CoachDTO {
   @IsString()
   @MaxLength(45)
   @IsEmail()
+  @IsNotEmpty()
   email?: string;
 
   @IsOptional()
@@ -42,6 +43,15 @@ export class CoachDTO {
   @IsNumber()
   @IsNotEmpty()
   rating?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @IsNotEmpty()
+  train_price?: number;
+
+  @IsOptional()
+  @IsString()
+  img_url?: string;
 
   @IsOptional()
   @IsInt()

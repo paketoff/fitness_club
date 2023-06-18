@@ -26,6 +26,15 @@ export class CoachService {
     return await this.coachRepository.save(coach);
   }
 
+  async getCurrentCoachInfo (user: any): Promise<CoachEntity | null> {
+    const id_coach = user.id_coach;
+
+    return await this.coachRepository.findOne({
+      where: {id_coach},
+      relations: ['category', 'gender', 'schedules', 'qualifications', 'role'],
+    })
+  }
+
   async getAllCoaches(): Promise<CoachEntity[]> {
     return await this.coachRepository.find();
   }
@@ -45,6 +54,33 @@ export class CoachService {
       }
     )
   }
+
+  async updateCurrentCoach(updatedData: any,
+    user: any): Promise<CoachEntity> {
+      let coach = await this.coachRepository.findOne({
+        where: {
+          id_coach: user.id_coach,
+        },
+        relations: ['category', 'gender', 'schedules', 'qualifications', 'role'],
+      });
+    
+      if (!coach) {
+        throw new NotFoundException(`Coach with id ${user.id_coach} was not found`);
+      }
+    
+      if (coach.id_coach !== user.id_coach) {
+        throw new HttpException('Coach ID mismatch', HttpStatus.FORBIDDEN);
+      }
+    
+      if (updatedData.password) {
+        const salt = await bcrypt.genSalt(12);
+        coach.password = await bcrypt.hash(updatedData.password, salt);
+      }
+  
+      coach = this.coachRepository.merge(coach, updatedData);
+    
+      return await this.coachRepository.save(coach);
+    }
 
   async updateCoachById(id: number, updatedData: CoachEntity, user?: any,): Promise<CoachEntity | null> {
     if ((user.role_name !== 'admin' && Number(user.id_coach) !== Number(id)) ||
@@ -218,102 +254,6 @@ export class CoachService {
     return { coach, user };
   }
 
-  // async addUserToCoach(coachId: number, userId: number, authUser?: any): Promise<CoachEntity> {
-  //   if ((authUser.role_name !== 'admin')) {
-  //     throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
-  //   }
-
-  //   const { coach, user } = await this.findCoachAndUserWithRelations(coachId, userId);
-  
-  //   if (coach.clients.some((client) => client.id_user === userId)) {
-  //     throw new BadRequestException('User is already assigned to this coach');
-  //   }
-  
-  //   coach.clients.push(user);
-  //   await this.coachRepository.save(coach);
-  
-  //   return coach;
-  // }
-
-  
-  // async getUsersForCoach(coachId: number, user?: any): Promise<UserEntity[]> {
-
-  //   if ((user.role_name !== 'admin' && Number(user.id_coach) !== Number(coachId)) ||
-  //     !(await this.getCoachById(coachId, user))
-  //   ) {
-  //     throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
-  //   }
-
-  //   const coach = await this.coachRepository.findOne({
-  //     where: { id_coach: coachId },
-  //     relations: ['clients'],
-  //   });
-  
-  //   if (!coach) {
-  //     throw new NotFoundException(`Coach with id: ${coachId} not found.`);
-  //   }
-  
-  //   return coach.clients;
-  // }
-
-  
-  // async updateUsersForCoach(
-  //   coachId: number,
-  //   newUserIds: number[],
-  //   user?: any,
-  // ): Promise<CoachEntity> {
-
-  //   if ((user.role_name !== 'admin' && Number(user.id_coach) !== Number(coachId)) ||
-  //     !(await this.getCoachById(coachId, user))
-  //   ) {
-  //     throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
-  //   }
-
-  //   const coach = await this.coachRepository.findOne({
-  //     where: { id_coach: coachId },
-  //     relations: ['clients'],
-  //   });
-  
-  //   if (!coach) {
-  //     throw new NotFoundException('Coach not found');
-  //   }
-  
-  //   const newUsers = await this.userRepository.findByIds(newUserIds);
-  
-  //   coach.clients = newUsers;
-  //   await this.coachRepository.save(coach);
-  
-  //   return coach;
-  // }
-  
-  // async removeUserFromCoach(
-  //   coachId: number,
-  //   userId: number,
-  //   authUser?: any,
-  // ): Promise<CoachEntity> {
-
-  //   if ((authUser.role_name !== 'admin' && Number(authUser.id_coach) !== Number(coachId)) ||
-  //     !(await this.getCoachById(coachId, authUser))
-  //   ) {
-  //     throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
-  //   }
-
-  //   const { coach, user } = await this.findCoachAndUserWithRelations(coachId, userId);
-  
-  //   const userIndex = coach.clients.findIndex(
-  //     (client) => client.id_user === userId,
-  //   );
-  
-  //   if (userIndex === -1) {
-  //     throw new NotFoundException('User not found in coach clients');
-  //   }
-  
-  //   coach.clients.splice(userIndex, 1);
-  //   await this.coachRepository.save(coach);
-  
-  //   return coach;
-  // }
-  
 }
 
 

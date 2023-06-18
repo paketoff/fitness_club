@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 import { CoachScheduleService } from './coach-schedule.service';
 import { CoachScheduleEntity } from './entities/coach-schedule.entity';
 import { CoachScheduleDTO } from './DTO/coach-schedule.dto';
@@ -21,8 +21,14 @@ export class CoachScheduleController {
   @Get('check-coach-schedule')
   async getScheduleForCoach(
     @Req() req,
-  ): Promise<CoachScheduleEntity[]> {
-    return await this.coachScheduleService.getCoachScheduleForCoach(req.user);
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<
+  { data: CoachScheduleEntity[], 
+    total: number, 
+    page: number, 
+    limit: number }> {
+    return await this.coachScheduleService.getCoachScheduleForCoach(req.user, {page, limit});
   }
 
   @Get(':id')
@@ -34,7 +40,7 @@ export class CoachScheduleController {
   @Roles('admin', 'coach')
   @Post('create-coach-schedule')
   async createCoachSchedule(
-    @Body() coachScheduleDTO: CoachScheduleDTO,
+    @Body() coachScheduleDTO: any,
     @Req() req,
     ): Promise<CoachScheduleEntity> {
     const coachSchedule = new CoachScheduleEntity();
@@ -46,8 +52,8 @@ export class CoachScheduleController {
   @Roles('admin', 'coach', 'user')
   @Put(':id')
   async updateCoachScheduleById(
-    id: number,
-    @Body() updatedData: CoachScheduleDTO,
+    @Param('id') id: number,
+    @Body() updatedData: any,
     @Req() req,
     ): Promise<CoachScheduleEntity | null> {
       const coachScheduleUpd = new CoachScheduleEntity();

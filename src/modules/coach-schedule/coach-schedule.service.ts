@@ -33,7 +33,11 @@ export class CoachScheduleService {
     )
   }
 
-  async getCoachScheduleForCoach(user: any): Promise<CoachScheduleEntity[]> {
+  async getCoachScheduleForCoach(user: any, paginationOptions: { page: number, limit: number }): Promise<
+  { data: CoachScheduleEntity[], 
+    total: number, 
+    page: number, 
+    limit: number }> {
     if (!user) {
       throw new HttpException('User object not provided', HttpStatus.BAD_REQUEST);
     }
@@ -46,9 +50,12 @@ export class CoachScheduleService {
       throw new HttpException('Requested coach not found', HttpStatus.NOT_FOUND);
     }
 
-    const scheduleRows = await this.coachScheduleRepo.find({
-      where: {coach: reqUser},
-    })
+    const [results, total] = await this.coachScheduleRepo.findAndCount({
+      where: { coach: reqUser },
+      relations: ['coach'],
+      skip: (paginationOptions.page - 1) * paginationOptions.limit,
+      take: paginationOptions.limit,
+    });
 
     if (user.role_name !== 'admin' && user.id_coach !== reqUser.id_coach) {
       throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
@@ -58,18 +65,40 @@ export class CoachScheduleService {
       throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
     }
 
-    return scheduleRows;
+    return {
+      data: results,
+      total,
+      page: paginationOptions.page,
+      limit: paginationOptions.limit
+    };
   }
 
-  async createCoachSchedule(schedule: CoachScheduleEntity, user?: any): Promise<CoachScheduleEntity> {
-    if (user.role_name !== 'admin' && user.id_coach !== schedule.coach.id_coach) {
-      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+  async createCoachSchedule(schedule: any, user?: any): Promise<CoachScheduleEntity> {
+    // if (user.role_name !== 'admin' && user.id_coach !== schedule.coach.id_coach) {
+    //   throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    // }
+
+    const scheduleData = {
+      work_date: schedule.work_date,
+      workPeriod_Start: schedule.workPeriod_Start,
+      workPeriod_End: schedule.workPeriod_End,
+      additional_info: schedule.additional_info,
+      isBooked: schedule.isBooked,
+      coach: await this.coachRepo.findOne({
+        where: {id_coach: user.id_coach},
+        relations: ['schedules'],
+      })
     }
 
-    return await this.coachScheduleRepo.save(schedule);
+    const scheduleObj = new CoachScheduleEntity();
+    Object.assign(scheduleObj, scheduleData);
+
+    console.log(scheduleObj);
+
+    return await this.coachScheduleRepo.save(scheduleObj);
   }
 
-  async updateCoachScheduleById(id: number, updatedData: Partial<CoachScheduleEntity>, user?: any): Promise<CoachScheduleEntity> {
+  async updateCoachScheduleById(id: number, updatedData: any, user?: any): Promise<CoachScheduleEntity> {
     const schedule = await this.coachScheduleRepo.findOne({
       where: {id_schedule: id},
       relations: ['coach'],
@@ -79,9 +108,9 @@ export class CoachScheduleService {
         throw new NotFoundException(`Schedule with ${id} not found!`);
     }
 
-    // if (user.role_name !== 'admin' && user.id_coach !== schedule.coach.id_coach) {
-    //     throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
-    // }
+    if (user.role_name !== 'admin' && user.id_coach !== schedule.coach.id_coach) {
+        throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
 
     Object.assign(schedule, updatedData);
 
