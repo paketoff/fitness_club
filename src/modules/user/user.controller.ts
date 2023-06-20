@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put, Req, UseGuards, Delete } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Req, UseGuards, Delete, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserEntity } from './entities/user.entity';
 import { AuthGuard } from '../auth/guards/auth.guard';
@@ -36,13 +36,20 @@ export class UserController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin')
   @Get('get-users')
-  async getAllUsers(): Promise<UserEntity[]> {
-    return await this.userService.getAllUsers();
+  async getAllUsers(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<
+  { data: UserEntity[], 
+    total: number, 
+    page: number, 
+    limit: number }> {
+    return await this.userService.getAllUsers({page, limit});
   }
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin', 'coach')
-  @Get('get-users')
+  @Get(':id')
   async getUserById(
     @Param('id') id: number,
   ): Promise<UserEntity> {

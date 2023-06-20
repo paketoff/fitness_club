@@ -9,6 +9,7 @@ import { WorkoutEntity } from '../workout/entities/workout.entity';
 import { WorkoutTypeEntity } from '../workout/entities/workout-type.entity';
 import { WorkoutService } from '../workout/workout.service';
 import { CoachService } from '../coach/coach.service';
+import { CoachScheduleEntity } from '../coach-schedule/entities/coach-schedule.entity';
 
 @Injectable()
 export class WorkoutHistoryService {
@@ -17,9 +18,12 @@ export class WorkoutHistoryService {
     private readonly workoutHistoryRepo: Repository<WorkoutHistoryEntity>, 
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
-    private readonly coachScheduleService: CoachScheduleService,
-    private readonly workoutService: WorkoutService,
-    private readonly coachService: CoachService,
+    @InjectRepository(CoachScheduleEntity)
+    private readonly coachScheduleRepo: Repository<CoachScheduleEntity>,
+    @InjectRepository(WorkoutEntity)
+    private readonly workoutRepo: Repository<WorkoutEntity>,
+    @InjectRepository(CoachEntity)
+    private readonly coachRepo: Repository<CoachEntity>,
     @InjectRepository(WorkoutTypeEntity)
     private readonly workoutTypeRepo: Repository<WorkoutTypeEntity>,
   ) {}
@@ -47,22 +51,32 @@ export class WorkoutHistoryService {
   }
 
   async bookTraining(user: any, scheduleId: number): Promise<WorkoutHistoryEntity> {
-    const coachSchedule = await this.coachScheduleService.getCoachScheduleById(scheduleId);
+    const coachSchedule = await this.coachScheduleRepo.findOne({
+      where: {id_schedule: scheduleId},
+      relations: ['coach'],
+    });
 
-    if (!coachSchedule) {
-      throw new NotFoundException('Schedule was not found');
-    }
+
+    // if (!coachSchedule) {
+    //   throw new NotFoundException('Schedule was not found');
+    // }
 
     const workoutHistoryData = {
       date: coachSchedule.work_date,
       start_time: coachSchedule.workPeriod_Start,
       end_time: coachSchedule.workPeriod_End,
-      coach: await this.coachService.getCoachById(coachSchedule.coach.id_coach),
-      workout: await this.workoutService.findWorkoutById(7),
+      coach: await this.coachRepo.findOne({
+        where: {schedules: coachSchedule},
+      }),
+      workout: await this.workoutRepo.findOne({
+        where: {id_workout: 7}
+      }),
       workout_type: await this.workoutTypeRepo.findOne({
         where: {id_workout_type: 3},
       }),
-      user: user
+      user: await this.userRepo.findOne({
+        where: {id_user: user.id_user}
+      })
     };
 
     const workoutHistory = new WorkoutHistoryEntity();
@@ -71,7 +85,7 @@ export class WorkoutHistoryService {
     const savedWorkoutHistory = await this.workoutHistoryRepo.save(workoutHistory);
 
     // Обновите запись в coach_schedule, установив isBooked в true
-    await this.coachScheduleService.updateCoachScheduleById(scheduleId, { isBooked: true }, user);
+    await this.coachScheduleRepo.update(scheduleId, { isBooked: true });
 
     return savedWorkoutHistory;
   }

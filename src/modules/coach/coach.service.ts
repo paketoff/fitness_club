@@ -83,11 +83,11 @@ export class CoachService {
     }
 
   async updateCoachById(id: number, updatedData: CoachEntity, user?: any,): Promise<CoachEntity | null> {
-    if ((user.role_name !== 'admin' && Number(user.id_coach) !== Number(id)) ||
-      !(await this.getCoachById(id, user))
-    ) {
-      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
-    }
+    // if ((Number(user.id_coach) !== Number(id)) ||
+    //   !(await this.getCoachById(id, user))
+    // ) {
+    //   throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    // }
   
     const coach = await this.coachRepository.findOne({
       where: {
@@ -95,9 +95,7 @@ export class CoachService {
       }
     });
 
-    if (!coach) {
-      throw new NotFoundException(`Coach with id ${id} was not found!`);
-    }
+    
 
     if (updatedData.password) {
       const salt = await bcrypt.genSalt(12);

@@ -20,8 +20,22 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async getAllUsers(): Promise<UserEntity[]> {
-    return await this.userRepository.find();
+  async getAllUsers(paginationOptions: { page: number, limit: number }): Promise<
+  { data: UserEntity[], 
+    total: number, 
+    page: number, 
+    limit: number }> {
+    const [results, total] = await this.userRepository.findAndCount({
+      skip: (paginationOptions.page - 1) * paginationOptions.limit,
+      take: paginationOptions.limit,
+    });
+
+    return {
+      data: results,
+      total,
+      page: paginationOptions.page,
+      limit: paginationOptions.limit
+    };
   }
 
 

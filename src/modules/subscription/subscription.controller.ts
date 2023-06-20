@@ -47,7 +47,7 @@ export class SubscriptionController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin', 'user', 'coach')
+  @Roles('admin', 'user')
   @Get(':id')
   async getSubscriptionById(
     @Param('id') id:number,

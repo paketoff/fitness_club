@@ -20,12 +20,12 @@ export class WorkoutHistoryController {
     return await this.workoutHistoryService.getAllHistory(req.user);
   }
 
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard)
   @Roles('user', 'admin')
-  @Post('book/:scheduleId')
+  @Post('book/:id')
   async bookTraining(
     @Req() req,
-    @Param('scheduleId') scheduleId: number
+    @Param('id') scheduleId: number
   ): Promise<WorkoutHistoryEntity> {
     return this.workoutHistoryService.bookTraining(req.user, scheduleId);
   }

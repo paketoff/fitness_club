@@ -31,6 +31,8 @@ export class RolesGuard implements CanActivate {
       return false;
     }
 
+
+    
     
   
     const authEntityRole = await this.roleRepo.findOne({ 
@@ -39,12 +41,19 @@ export class RolesGuard implements CanActivate {
       }
    });
 
+   console.log('authEntityRole', authEntityRole);
+
+   
 
   
     if (!authEntityRole) {
       return false;
     }
   
+
+    console.log('requiredRoles', requiredRoles);
+    console.log('authEntityRole.role_name', authEntityRole.role_name);
+
     return requiredRoles.some((role) => role === authEntityRole.role_name);
   }
 }
