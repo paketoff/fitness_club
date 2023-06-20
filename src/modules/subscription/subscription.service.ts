@@ -84,6 +84,7 @@ export class SubscriptionService {
 
     const subscriptions = await this.subRepository.find({
       where: {user: reqUser},
+      relations: ['subscriptionStatus'],
     })
 
     if (user.role_name !== 'admin' && user.id_user !== reqUser.id_user) {
