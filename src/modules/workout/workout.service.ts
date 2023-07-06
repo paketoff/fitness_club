@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { WorkoutEntity } from './entities/workout.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -18,7 +18,12 @@ export class WorkoutService {
   }
 
   async getAllWorkouts(): Promise<WorkoutEntity[]> {
-    return await this.workoutRepository.find();
+    return await this.workoutRepository.find({
+        where: {
+          id_workout: Not(7),
+        }
+      }
+    );
   }
 
   async findWorkoutById(id: number): Promise<WorkoutEntity> {

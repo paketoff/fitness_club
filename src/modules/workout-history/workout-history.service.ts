@@ -34,8 +34,6 @@ export class WorkoutHistoryService {
     } 
   }
 
-  
-
   async getHistoryById(id: number, user: any): Promise<WorkoutHistoryEntity> {
     const history = await this.workoutHistoryRepo.findOne({
       where: { id_history: id },
@@ -55,11 +53,6 @@ export class WorkoutHistoryService {
       where: {id_schedule: scheduleId},
       relations: ['coach'],
     });
-
-
-    // if (!coachSchedule) {
-    //   throw new NotFoundException('Schedule was not found');
-    // }
 
     const workoutHistoryData = {
       date: coachSchedule.work_date,
@@ -84,7 +77,6 @@ export class WorkoutHistoryService {
 
     const savedWorkoutHistory = await this.workoutHistoryRepo.save(workoutHistory);
 
-    // Обновите запись в coach_schedule, установив isBooked в true
     await this.coachScheduleRepo.update(scheduleId, { isBooked: true });
 
     return savedWorkoutHistory;

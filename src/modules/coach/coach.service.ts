@@ -17,7 +17,6 @@ export class CoachService {
     private readonly qualificationRepository: Repository<CoachQualificationEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly roleService: RoleService,
     ) {}
 
   async createCoach(coach: CoachEntity): Promise<CoachEntity> {
@@ -83,11 +82,11 @@ export class CoachService {
     }
 
   async updateCoachById(id: number, updatedData: CoachEntity, user?: any,): Promise<CoachEntity | null> {
-    // if ((Number(user.id_coach) !== Number(id)) ||
-    //   !(await this.getCoachById(id, user))
-    // ) {
-    //   throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
-    // }
+    if ((Number(user.id_coach) !== Number(id)) ||
+      !(await this.getCoachById(id, user))
+    ) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
   
     const coach = await this.coachRepository.findOne({
       where: {

@@ -2,9 +2,9 @@ import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestj
 import { InjectRepository } from '@nestjs/typeorm';
 import { SubscriptionEntity } from './entities/subscription.entity';
 import { Repository } from 'typeorm';
-import { UserService } from '../user/user.service';
 import { SubscriptionTypeEntity } from './entities/subscription-type.entity';
 import { SubscriptionStatusEntity } from './entities/subscription-status.entity';
+import { UserEntity } from '../user/entities/user.entity';
 
 @Injectable()
 export class SubscriptionService {
@@ -16,7 +16,8 @@ export class SubscriptionService {
     private readonly subTypeRepository: Repository<SubscriptionTypeEntity>,
     @InjectRepository(SubscriptionStatusEntity)
     private readonly subStatusRepository: Repository<SubscriptionStatusEntity>,
-    private readonly userService: UserService,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
   ) {}
 
   async getSubscriptionTypeById(sub_type_id: number): Promise<SubscriptionTypeEntity> {
@@ -38,7 +39,11 @@ export class SubscriptionService {
       subscription.start_period = startDate;
       subscription.end_period = endDate;
       subscription.trains_count = 12;
-      subscription.user = await this.userService.findUserById(user.id_user);;
+      subscription.user = await this.userRepository.findOne({
+        where: {
+          id_user: user.id_user,
+        }
+      });
       subscription.subscriptionStatus = await this.subStatusRepository.findOne({
         where: {id_status: 2},
       }), 
@@ -76,7 +81,11 @@ export class SubscriptionService {
       throw new HttpException('User object not provided', HttpStatus.BAD_REQUEST);
     }
 
-    const reqUser = await this.userService.findUserById(user.id_user);
+    const reqUser = await this.userRepository.findOne({
+      where: {
+        id_user: user.id_user,
+      }
+    });
 
     if (!reqUser) {
       throw new HttpException('Requested user not found', HttpStatus.NOT_FOUND);
@@ -121,8 +130,4 @@ export class SubscriptionService {
       throw new NotFoundException(`Subscription with id ${id} not found`);
     }
   }
-
-  
-
-
 }

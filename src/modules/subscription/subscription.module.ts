@@ -9,10 +9,11 @@ import { RoleEntity } from '../user/entities/role.entity';
 import { SubscriptionTypeEntity } from './entities/subscription-type.entity';
 import { SubscriptionStatusEntity } from './entities/subscription-status.entity';
 import { SubTypeModule } from './sub-type/sub-type.module';
+import { UserEntity } from '../user/entities/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([SubscriptionEntity, SubscriptionTypeEntity, SubscriptionStatusEntity, RoleEntity]),
+    TypeOrmModule.forFeature([SubscriptionEntity, SubscriptionTypeEntity, SubscriptionStatusEntity, RoleEntity, UserEntity]),
     UserModule,
     SubTypeModule,
 ],

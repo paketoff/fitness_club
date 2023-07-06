@@ -10,7 +10,6 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
-    private readonly roleService: RoleService,
   ) {}
 
   
